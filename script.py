@@ -13,36 +13,41 @@ results = []
 def laplacian_variance(image):
     return cv2.Laplacian(image, cv2.CV_64F).var()
 
+def normalize_image(image):
+    return image.astype(np.float32) / 255.0
+
 def calculate_psnr_skimage(original, degraded):
+    original = normalize_image(original)
+    degraded = normalize_image(degraded)
     mse = np.mean((original - degraded) ** 2)
     if mse == 0:
-        return float('inf')  
-    max_pixel = 255.0
-    return 10 * np.log10((max_pixel ** 2) / mse)
+        return float('inf')
+    return 10 * np.log10(1 / mse)
 
 def calculate_ssim_skimage(original, degraded):
-    return ssim(original, degraded, data_range=original.max() - original.min())
+    original = normalize_image(original)
+    degraded = normalize_image(degraded)
+    return ssim(original, degraded, data_range=1)
 
 def calculate_psnr_opencv(original, degraded):
-    psnr_value = cv2.PSNR(original, degraded)
-    return psnr_value if psnr_value > 0 else float('inf')  
+    return cv2.PSNR(original, degraded)
 
 def calculate_ssim_opencv(original, degraded):
-    if np.all(original == original[0, 0]) or np.all(degraded == degraded[0, 0]):
-        return 1.0  
-
-    C1 = 6.5025  
-    C2 = 58.5225
-    original = original.astype(np.float32)
-    degraded = degraded.astype(np.float32)
-    mu1 = cv2.GaussianBlur(original, (5, 5), 1.5)
-    mu2 = cv2.GaussianBlur(degraded, (5, 5), 1.5)
+    original = normalize_image(original)
+    degraded = normalize_image(degraded)
+    K1 = 0.01 #costante stabilizzazione
+    K2 = 0.03 #costante stabilizzazione
+    C1 = (K1 * 1) ** 2
+    C2 = (K2 * 1) ** 2
+    
+    mu1 = cv2.GaussianBlur(original, (11, 11), 1.5)
+    mu2 = cv2.GaussianBlur(degraded, (11, 11), 1.5)
     mu1_sq = mu1 ** 2
     mu2_sq = mu2 ** 2
     mu1_mu2 = mu1 * mu2
-    sigma1_sq = cv2.GaussianBlur(original**2, (5, 5), 1.5) - mu1_sq
-    sigma2_sq = cv2.GaussianBlur(degraded**2, (5, 5), 1.5) - mu2_sq
-    sigma12 = cv2.GaussianBlur(original * degraded, (5, 5), 1.5) - mu1_mu2
+    sigma1_sq = cv2.GaussianBlur(original**2, (11, 11), 1.5) - mu1_sq
+    sigma2_sq = cv2.GaussianBlur(degraded**2, (11, 11), 1.5) - mu2_sq
+    sigma12 = cv2.GaussianBlur(original * degraded, (11, 11), 1.5) - mu1_mu2
     ssim_map = ((2 * mu1_mu2 + C1) * (2 * sigma12 + C2)) / ((mu1_sq + mu2_sq + C1) * (sigma1_sq + sigma2_sq + C2))
     return ssim_map.mean()
 
@@ -93,7 +98,6 @@ for blurred_file in image_files_blurred:
         psnr_time_opencv, ssim_time_opencv
     ])
 
-
 df = pd.DataFrame(results, columns=[
     "Blurred Image", "Sharp Image", "Laplacian Variance", 
     "PSNR skimage", "SSIM skimage", "PSNR openCV", "SSIM openCV", 
@@ -102,6 +106,6 @@ df = pd.DataFrame(results, columns=[
 ])
 
 output_path = os.path.join(os.path.dirname(__file__), "catalogazione.xlsx")
-df.to_excel(output_path, index=False, engine="openpyxl")
+df.to_excel(output_path, index = False, engine = "openpyxl")
 
 print(f"File Excel salvato in: {output_path}")
