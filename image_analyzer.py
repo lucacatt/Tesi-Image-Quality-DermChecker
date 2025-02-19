@@ -17,25 +17,25 @@ class ImageAnalyzer:
     def normalize_image(image):
         return image.astype(np.float32) / 255.0
 
-    def calculate_psnr_skimage(original, degraded):
-        original = ImageAnalyzer.normalize_image(original)
-        degraded = ImageAnalyzer.normalize_image(degraded)
+    def calculate_psnr_skimage(self, original, degraded):
+        original = self.normalize_image(original)
+        degraded = self.normalize_image(degraded)
         mse = np.mean((original - degraded) ** 2)
         if mse == 0:
             return float('inf')
         return 10 * np.log10(1 / mse)
 
-    def calculate_ssim_skimage(original, degraded):
-        original = ImageAnalyzer.normalize_image(original)
-        degraded = ImageAnalyzer.normalize_image(degraded)
+    def calculate_ssim_skimage(self, original, degraded):
+        original = self.normalize_image(original)
+        degraded = self.normalize_image(degraded)
         return ssim(original, degraded, data_range=1)
 
-    def calculate_psnr_opencv(original, degraded):
+    def calculate_psnr_opencv(self, original, degraded):
         return cv2.PSNR(original, degraded)
 
-    def calculate_ssim_opencv(original, degraded):
-        original = ImageAnalyzer.normalize_image(original)
-        degraded = ImageAnalyzer.normalize_image(degraded)
+    def calculate_ssim_opencv(self, original, degraded):
+        original = self.normalize_image(original)
+        degraded = self.normalize_image(degraded)
         K1 = 0.01 #costante stabilizzazione
         K2 = 0.03 #costante stabilizzazione
         C1 = (K1 * 1) ** 2
@@ -79,16 +79,35 @@ class ImageAnalyzer:
             laplacian_time = time.perf_counter() - start_time
 
             start_time = time.perf_counter()
-            psnr_value = self.calculate_psnr(sharp_image, blurred_image)
-            psnr_time = max(time.perf_counter() - start_time, 1e-6)
+            psnr_value_skimage = self.calculate_psnr_skimage(sharp_image, blurred_image)
+            psnr_time_skimage = max(time.perf_counter() - start_time, 1e-6)  
 
             start_time = time.perf_counter()
-            ssim_value = self.calculate_ssim(sharp_image, blurred_image)
-            ssim_time = max(time.perf_counter() - start_time, 1e-6)
+            ssim_value_skimage = self.calculate_ssim_skimage(sharp_image, blurred_image)
+            ssim_time_skimage = max(time.perf_counter() - start_time, 1e-6)  
 
-            results.append([blurred_file, sharp_file, lap_var, psnr_value, ssim_value, laplacian_time, psnr_time, ssim_time])
+            start_time = time.perf_counter()
+            psnr_value_opencv = self.calculate_psnr_opencv(sharp_image, blurred_image)
+            psnr_time_opencv = max(time.perf_counter() - start_time, 1e-6)  
 
-        df = pd.DataFrame(results, columns=["Blurred Image", "Sharp Image", "Laplacian Variance", "PSNR", "SSIM", "Laplacian Time (s)", "PSNR Time (s)", "SSIM Time (s)"])
+            start_time = time.perf_counter()
+            ssim_value_opencv = self.calculate_ssim_opencv(sharp_image, blurred_image)
+            ssim_time_opencv = max(time.perf_counter() - start_time, 1e-6)  
+
+            results.append([
+                blurred_file, sharp_file, lap_var, 
+                psnr_value_skimage, ssim_value_skimage, 
+                psnr_value_opencv, ssim_value_opencv, 
+                laplacian_time, psnr_time_skimage, ssim_time_skimage, 
+                psnr_time_opencv, ssim_time_opencv
+            ])
+
+        df = pd.DataFrame(results, columns=[
+            "Blurred Image", "Sharp Image", "Laplacian Variance", 
+            "PSNR skimage", "SSIM skimage", "PSNR openCV", "SSIM openCV", 
+            "Laplacian Time (s)", "PSNR Time (s) skimage", "SSIM Time (s) skimage", 
+            "PSNR Time (s) openCV", "SSIM Time (s) openCV"
+        ])
         output_path = os.path.join(os.path.dirname(__file__), output_filename)
         df.to_excel(output_path, index=False, engine="openpyxl")
         print(f"File Excel salvato in: {output_path}")
