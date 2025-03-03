@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-model = tf.keras.models.load_model("blur_detection_with_metrics.h5")
+model = tf.keras.models.load_model("best_model.h5")
 
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 converter.optimizations = [tf.lite.Optimize.DEFAULT]  # Ottimizzazione per mobile
