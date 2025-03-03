@@ -1,7 +1,6 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
@@ -20,7 +19,7 @@ class BlurDetectionApp extends StatefulWidget {
 class _BlurDetectionAppState extends State<BlurDetectionApp> {
   File? _image;
   Interpreter? _interpreter;
-  String _result = "Carica un'immagine per l'analisi";
+  String _result = "Seleziona un'immagine per l'analisi";
 
   @override
   void initState() {
@@ -30,7 +29,7 @@ class _BlurDetectionAppState extends State<BlurDetectionApp> {
 
   Future<void> _loadModel() async {
     try {
-      _interpreter = await Interpreter.fromAsset('assets/model.tflite');
+      _interpreter = await Interpreter.fromAsset('assets/blur_model_with_metrics.tflite');
       setState(() {});
     } catch (e) {
       setState(() {
@@ -40,11 +39,10 @@ class _BlurDetectionAppState extends State<BlurDetectionApp> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        _image = File(result.files.single.path!);
       });
       _analyzeImage();
     }
@@ -53,22 +51,14 @@ class _BlurDetectionAppState extends State<BlurDetectionApp> {
   Future<void> _analyzeImage() async {
     if (_image == null || _interpreter == null) return;
 
-    // Leggi il file immagine
     Uint8List imageBytes = await _image!.readAsBytes();
     img.Image? image = img.decodeImage(imageBytes);
+    if (image == null) return;
 
-    if (image == null) {
-      setState(() {
-        _result = "Errore nella decodifica dell'immagine";
-      });
-      return;
-    }
-
-    // Normalizza e ridimensiona l'immagine secondo il modello
-    final int inputSize = 224; // Verifica la dimensione richiesta dal modello
+    final int inputSize = 224;
     img.Image resizedImage = img.copyResize(image, width: inputSize, height: inputSize);
 
-    // Converti l'immagine in un tensore 4D [1, 224, 224, 3]
+    // 📌 Convertiamo l'immagine in un tensore 4D [1, 224, 224, 3]
     List<List<List<List<double>>>> input = List.generate(
       1,
           (batch) => List.generate(
@@ -87,20 +77,21 @@ class _BlurDetectionAppState extends State<BlurDetectionApp> {
       ),
     );
 
-    // **Modifica l'output per supportare la dimensione `[1,2]`**
-    List<List<double>> output = List.generate(1, (_) => List.filled(2, 0.0));
+    // 📊 Calcola metriche (Laplacian, PSNR, SSIM) - **Migliorare con OpenCV**
+    double laplacianVar = 100.0; // Valore placeholder, da migliorare con OpenCV su PC
+    double psnrValue = 30.0; // Placeholder
+    double ssimValue = 0.8; // Placeholder
 
-    // Esegui l'inferenza
-    _interpreter!.run(input, output);
+    List<List<double>> metrics = [[laplacianVar, psnrValue, ssimValue]];
+    List<List<double>> output = [[0.0]];
+
+    // Esegui l'inferenza con il modello
+    _interpreter!.run([input, metrics], output);
 
     setState(() {
-      double blurScore = output[0][0];  // Adatta se il modello restituisce altro
-      double sharpScore = output[0][1];
-
-      _result = "Sfocata: ${blurScore.toStringAsFixed(4)}, Nitida: ${sharpScore.toStringAsFixed(4)}";
+      _result = "Sfocatura: ${output[0][0] > 0.5 ? 'Sfocata' : 'Nitida'}";
     });
   }
-
 
   @override
   void dispose() {
@@ -112,13 +103,11 @@ class _BlurDetectionAppState extends State<BlurDetectionApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text("Blur Detection con TFLite")),
+        appBar: AppBar(title: const Text("Blur Detection su PC")),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _image != null
-                ? Image.file(_image!)
-                : const Icon(Icons.image, size: 100),
+            _image != null ? Image.file(_image!) : const Icon(Icons.image, size: 100),
             const SizedBox(height: 20),
             Text(_result, style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 20),
