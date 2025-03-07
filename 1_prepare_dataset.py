@@ -5,30 +5,26 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
 
-# dataset_path = "C:\\Users\\crist\\Downloads\\GOPRO_Large\\test"
-# dataset_path2 = "C:\\Users\\crist\\Downloads\\GOPRO_Large\\train"
-categories = ["Anaglyph","blur", "gif", "gt"]
+categories = ["sharp","blur_gamma", "blur"]
 
 def laplacian_variance(image):
     return cv2.Laplacian(image, cv2.CV_64F).var()
 
-dataset_paths = ["C:\\Users\\crist\\Downloads\\RealBlur-R_BM3D_ECC_IMCORR_centroid_itensity_ref","C:\\Users\\crist\\Downloads\\RealBlur-J_ECC_IMCORR_centroid_itensity_ref"]
+def variance_of_gradient(image):
+    gx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)
+    gy = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)
+    return (gx.var() + gy.var()) / 2
 
-if os.path.exists("data.npy"):
-    print("Carico dataset esistente...")
-    existing_data = np.load("data.npy")
-    existing_labels = np.load("labels.npy")
-    existing_metrics = np.load("metrics.npy")
-    
-    # Converto in liste Python per fare .append()
-    data = existing_data.tolist()
-    labels = existing_labels.tolist()
-    metrics = existing_metrics.tolist()
-else:
-    print("Nessun dataset esistente trovato. Creo nuovi array...")
-    data = []
-    labels = []
-    metrics = []
+def tenengrad(image):
+    sobelx = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=5)
+    sobely = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=5)
+    return np.sqrt(sobelx**2 + sobely**2).mean()
+
+dataset_paths = ["C:\\Users\\crist\\Downloads\\GOPRO_Large\\train","C:\\Users\\crist\\Downloads\\GOPRO_Large\\test"]
+
+data = []
+labels = []
+metrics = []
 
 for dataset_path in dataset_paths:
     for video_folder in os.listdir(dataset_path):
@@ -52,13 +48,16 @@ for dataset_path in dataset_paths:
                     continue
                 
                 laplacian = laplacian_variance(img)
+                vog = variance_of_gradient(img)
+                tenengrad_val = tenengrad(img)
+
                 blurred_img = cv2.GaussianBlur(img, (5,5), 0)
                 psnr_value = psnr(img, blurred_img)
                 ssim_value, _ = ssim(img, blurred_img, full=True)
 
                 data.append(img_to_array(load_img(img_path, target_size=(224,224))) / 255.0)
                 labels.append(label)
-                metrics.append([laplacian, psnr_value, ssim_value])
+                metrics.append([laplacian, vog, tenengrad_val, psnr_value, ssim_value])
 
 final_data = np.array(data, dtype=np.float32)
 final_labels = np.array(labels, dtype=np.int32)
@@ -68,4 +67,4 @@ np.save("data.npy", final_data)
 np.save("labels.npy", final_labels)
 np.save("metrics.npy", final_metrics)
 
-print("Dataset elaborato e salvato con metriche Laplacian, PSNR e SSIM!")
+print("Dataset elaborato e salvato con Laplacian, VoG, Tenengrad, PSNR e SSIM!")
