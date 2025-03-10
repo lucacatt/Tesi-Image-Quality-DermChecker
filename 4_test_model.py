@@ -15,16 +15,34 @@ results = []
 true_labels = []
 predicted_labels = []
 
-
-LAPLACIAN_MIN_NORMALIZED = 0.0001
-LAPLACIAN_MAX_NORMALIZED = 0.01
-
 LAPLACIAN_TARGET_MIN = 0
 LAPLACIAN_TARGET_MAX = 1000
 
-def rescale_laplacian(laplacian_normalized, min_norm=LAPLACIAN_MIN_NORMALIZED, max_norm=LAPLACIAN_MAX_NORMALIZED, target_min=LAPLACIAN_TARGET_MIN, target_max=LAPLACIAN_TARGET_MAX):
-    """Rescala la varianza laplaciana normalizzata all'intervallo target."""
+def collect_laplacian_values():
+    laplacians = []
+    for category in categories:
+        folder = os.path.join(dataset_path, category)
+        if not os.path.exists(folder):
+            continue
 
+        for filename in os.listdir(folder):
+            img_path = os.path.join(folder, filename)
+            try:
+                img = tf.io.read_file(img_path)
+                img = tf.image.decode_jpeg(img, channels=3)
+                img = tf.image.resize(img, (224, 224)) / 255.0
+                img = tf.expand_dims(img, axis=0)
+
+                _, sharpness_metrics = model.predict(img)
+                laplacian = sharpness_metrics[0][0]
+                laplacians.append(laplacian)
+            except Exception as e:
+                print(f"Error processing {filename}: {e}")
+    return min(laplacians), max(laplacians)
+
+LAPLACIAN_MIN_NORMALIZED, LAPLACIAN_MAX_NORMALIZED = collect_laplacian_values()
+
+def rescale_laplacian(laplacian_normalized, min_norm=LAPLACIAN_MIN_NORMALIZED, max_norm=LAPLACIAN_MAX_NORMALIZED, target_min=LAPLACIAN_TARGET_MIN, target_max=LAPLACIAN_TARGET_MAX):
     if max_norm == min_norm:
         return target_min
     rescaled_lap = ((laplacian_normalized - min_norm) / (max_norm - min_norm)) * (target_max - target_min) + target_min
