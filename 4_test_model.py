@@ -6,7 +6,7 @@ from SharpnessMetricsLayerClass import SharpnessMetricsLayer
 import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-model = tf.keras.models.load_model("blur_detection_with_metrics.h5", custom_objects={"SharpnessMetricsLayer": SharpnessMetricsLayer})
+model = tf.keras.models.load_model("blur_detection_with_metrics_retrained_intensified.h5", custom_objects={"SharpnessMetricsLayer": SharpnessMetricsLayer})
 
 dataset_path = "dataset"
 categories = ["defocused_blurred", "motion_blurred", "sharp"]
