@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 def apply_random_degradation(image):
-    choices = ['contrast'] # Aggiunti lens_distortion e complex_noise
+    choices = ['noisiness']
     #num_degradations = random.randint(1, 3) # Applica da 1 a 3 degradazioni in sequenza
     chosen_degradations = random.sample(choices, 1)
 
@@ -14,7 +14,6 @@ def apply_random_degradation(image):
     for choice in chosen_degradations:
         if choice == 'motion_blur':
             kernel_size = random.randint(40, 80)
-            print(f"Motion Blur Kernel Size: {kernel_size}")
             kernel_motion_blur = np.zeros((kernel_size, kernel_size))
             kernel_motion_blur[int((kernel_size - 1) / 2), :] = np.ones(kernel_size)
             kernel_motion_blur /= kernel_size
@@ -43,16 +42,17 @@ def apply_random_degradation(image):
             contrast_factor = random.uniform(1.5, 2.5)
             degraded_image = tf.image.adjust_contrast(degraded_image, contrast_factor=contrast_factor)
 
-        # elif choice == 'colorfulness':
-        #     saturation_factor = random.uniform(0.2, 1.8) # Range di saturazione più moderato
-        #     degraded_image = tf.image.adjust_saturation(degraded_image, saturation_factor=saturation_factor)
+        elif choice == 'colorfulness':
+            saturation_factor = random.uniform(1.2, 5.8)
+            degraded_image = tf.image.adjust_saturation(degraded_image, saturation_factor=saturation_factor)
 
-        # elif choice == 'noisiness':
-        #     noise_type = random.choice(['gaussian', 'salt_and_pepper', 'complex']) # Aggiunto 'complex' noise
-        #     if noise_type == 'gaussian':
-        #         noise = np.random.normal(0, random.uniform(0.03, 0.15), degraded_image.shape).astype(np.float32) # Rumore gaussiano ridotto
-        #         image_np = degraded_image.numpy() + noise
-        #         degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+        elif choice == 'noisiness':
+            noise_type = random.choice(['gaussian'])
+            if noise_type == 'gaussian':
+                noise = np.random.normal(0, random.uniform(0.10, 0.25), degraded_image.shape).astype(np.float32) 
+                image_np = degraded_image.numpy() + noise
+                degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+
         #     elif noise_type == 'salt_and_pepper':
         #         s_vs_p = 0.5
         #         amount = random.uniform(0.005, 0.025) # Rumore sale e pepe ridotto
