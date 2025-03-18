@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 def apply_random_degradation(image):
-    choices = ['noisiness']
+    choices = ['lens_distortion']
     #num_degradations = random.randint(1, 3) # Applica da 1 a 3 degradazioni in sequenza
     chosen_degradations = random.sample(choices, 1)
 
@@ -47,99 +47,56 @@ def apply_random_degradation(image):
             degraded_image = tf.image.adjust_saturation(degraded_image, saturation_factor=saturation_factor)
 
         elif choice == 'noisiness':
-            noise_type = random.choice(['gaussian'])
+            noise_type = random.choice(['complex'])
             if noise_type == 'gaussian':
                 noise = np.random.normal(0, random.uniform(0.10, 0.25), degraded_image.shape).astype(np.float32) 
                 image_np = degraded_image.numpy() + noise
                 degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+            elif noise_type == 'salt_and_pepper':
+                s_vs_p = 0.5
+                amount = random.uniform(0.09, 0.2) 
+                out = np.copy(degraded_image.numpy())
+                num_salt = np.ceil(amount * degraded_image.numpy().size * s_vs_p)
+                coords = [np.random.randint(0, i - 1, int(num_salt)) for i in degraded_image.shape]
+                out[tuple(coords)] = 1.0
+                num_pepper = np.ceil(amount* degraded_image.numpy().size * (1. - s_vs_p))
+                coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in degraded_image.shape]
+                out[tuple(coords)] = 0.0
+                degraded_image = tf.convert_to_tensor(out, dtype=tf.float32)
+            elif noise_type == 'complex':
+                gaussian_noise = np.random.normal(0, random.uniform(0.10, 0.25), degraded_image.shape).astype(np.float32)
+                uniform_noise = np.random.uniform(-0.45, 0.45, degraded_image.shape).astype(np.float32)
+                noise = gaussian_noise + uniform_noise
+                image_np = degraded_image.numpy() + noise
+                degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
 
-        #     elif noise_type == 'salt_and_pepper':
-        #         s_vs_p = 0.5
-        #         amount = random.uniform(0.005, 0.025) # Rumore sale e pepe ridotto
-        #         out = np.copy(degraded_image.numpy())
-        #         # Rumore sale
-        #         num_salt = np.ceil(amount * degraded_image.numpy().size * s_vs_p)
-        #         coords = [np.random.randint(0, i - 1, int(num_salt)) for i in degraded_image.shape]
-        #         out[tuple(coords)] = 1.0
-        #         # Rumore pepe
-        #         num_pepper = np.ceil(amount* degraded_image.numpy().size * (1. - s_vs_p))
-        #         coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in degraded_image.shape]
-        #         out[tuple(coords)] = 0.0
-        #         degraded_image = tf.convert_to_tensor(out, dtype=tf.float32)
-        #     elif noise_type == 'complex': # Rumore complesso (esempio: somma di gaussiano e uniforme)
-        #         gaussian_noise = np.random.normal(0, random.uniform(0.02, 0.08), degraded_image.shape).astype(np.float32)
-        #         uniform_noise = np.random.uniform(-0.03, 0.03, degraded_image.shape).astype(np.float32)
-        #         noise = gaussian_noise + uniform_noise
-        #         image_np = degraded_image.numpy() + noise
-        #         degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+        elif choice == 'chromatic_aberration':
+            offset = random.randint(20, 24)
+            image_np = degraded_image.numpy()
+            if random.random() > 0.5:
+                image_np[:, :, 0] = np.roll(image_np[:, :, 0], offset, axis=1)
+                image_np[:, :, 2] = np.roll(image_np[:, :, 2], -offset, axis=1)
+            else:
+                image_np[:, :, 0] = np.roll(image_np[:, :, 0], -offset, axis=1)
+                image_np[:, :, 2] = np.roll(image_np[:, :, 2], offset, axis=1)
+            degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
+            degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0)
 
+        elif choice == 'pixelation':
+            scale_factor = random.uniform(0.05, 0.15)
+            new_height = int(degraded_image.shape[0] * scale_factor)
+            new_width = int(degraded_image.shape[1] * scale_factor)
+            image_np = degraded_image.numpy()
+            image_small = cv2.resize(image_np, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
+            image_resized = cv2.resize(image_small, (degraded_image.shape[1], degraded_image.shape[0]), interpolation=cv2.INTER_NEAREST)
+            degraded_image = tf.convert_to_tensor(image_resized, dtype=tf.float32)
 
-        # elif choice == 'chromatic_aberration':
-        #     offset = random.randint(1, 4)
-        #     image_np = degraded_image.numpy()
-        #     if random.random() > 0.5:
-        #         image_np[:, :, 0] = np.roll(image_np[:, :, 0], offset, axis=1)
-        #         image_np[:, :, 2] = np.roll(image_np[:, :, 2], -offset, axis=1)
-        #     else:
-        #         image_np[:, :, 0] = np.roll(image_np[:, :, 0], -offset, axis=1)
-        #         image_np[:, :, 2] = np.roll(image_np[:, :, 2], offset, axis=1)
-        #     degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
-        #     degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0)
-
-        # elif choice == 'pixelation':
-        #     scale_factor = random.uniform(0.1, 0.4)
-        #     new_height = int(degraded_image.shape[0] * scale_factor)
-        #     new_width = int(degraded_image.shape[1] * scale_factor)
-        #     image_np = degraded_image.numpy()
-        #     image_small = cv2.resize(image_np, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
-        #     image_resized = cv2.resize(image_small, (degraded_image.shape[1], degraded_image.shape[0]), interpolation=cv2.INTER_NEAREST)
-        #     degraded_image = tf.convert_to_tensor(image_resized, dtype=tf.float32)
-
-        # elif choice == 'vignetting':
-        #     intensity = random.uniform(0.2, 0.7) # Vignettatura più leggera
-        #     radius = random.uniform(0.5, 0.9) # Raggio vignettatura più ampio
-        #     image_np = degraded_image.numpy()
-        #     height, width = image_np.shape[:2]
-        #     x_center, y_center = width // 2, height // 2
-        #     x = np.arange(width)
-        #     y = np.arange(height)
-        #     X, Y = np.meshgrid(x, y)
-        #     distance_from_center = np.sqrt((X - x_center)**2 + (Y - y_center)**2)
-        #     max_distance = np.sqrt((x_center)**2 + (y_center)**2)
-        #     vignette_mask = 1 - intensity * (distance_from_center / max_distance)**2
-        #     vignette_mask = np.clip(vignette_mask, 1 - intensity, 1)
-        #     vignette_mask = np.tile(vignette_mask[:, :, np.newaxis], (1, 1, 3))
-        #     image_np = degraded_image.numpy() * vignette_mask
-        #     degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
-
-        # elif choice == 'color_cast':
-        #     color_factor = np.array([1.0 + random.uniform(-0.15, 0.15),
-        #                              1.0 + random.uniform(-0.15, 0.15),
-        #                              1.0 + random.uniform(-0.15, 0.15)])
-        #     image_np = degraded_image.numpy() * color_factor
-        #     degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
-
-        # elif choice == 'lens_distortion': # Distorsione lente (barilotto o cuscino)
-        #     distortion_type = random.choice(['barrel', 'pincushion'])
-        #     k = random.uniform(0.1, 0.3) # Intensità distorsione
-        #     image_np = degraded_image.numpy()
-        #     h, w = image_np.shape[:2]
-        #     distCoeff = np.array([k, 0, 0, 0]) # Solo distorsione radiale k1
-        #     if distortion_type == 'pincushion':
-        #         distCoeff = -distCoeff # Negativo per distorsione a cuscino
-
-        #     # Matrice della camera (approssimativa, centrata)
-        #     center = (w/2, h/2)
-        #     focal_length = w  # Approssimazione
-        #     cameraMatrix = np.array(
-        #                      [[focal_length, 0, center[0]],
-        #                      [0, focal_length, center[1]],
-        #                      [0, 0, 1]], dtype = "double"
-        #                      )
-        #     image_distorted = cv2.undistort(image_np, cameraMatrix, distCoeff) # Undistort per creare la distorsione
-
-        #     degraded_image = tf.convert_to_tensor(image_distorted, dtype=tf.float32)
-        #     degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0) # Clip dopo la distorsione
+        elif choice == 'color_cast':
+            color_factor = np.array([1.0 + random.uniform(-0.35, 0.35),
+                                     1.0 + random.uniform(-0.35, 0.35),
+                                     1.0 + random.uniform(-0.35, 0.35)])
+            image_np = degraded_image.numpy() * color_factor
+            degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
 
         # elif choice == 'complex_noise': # Rumore complesso (esempio 2: rumore Perlin) - richiede libreria `perlin-numpy` (pip install perlin-numpy)
         #     try:
@@ -155,8 +112,6 @@ def apply_random_degradation(image):
         #     except ImportError:
         #         print("Warning: perlin-numpy not installed, complex_noise skipped.")
         #         pass # Se perlin-numpy non è installato, salta questo effetto
-
-
         degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0)
 
     return degraded_image
