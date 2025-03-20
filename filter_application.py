@@ -5,15 +5,16 @@ import matplotlib.pyplot as plt
 import cv2
 
 def apply_random_degradation(image):
-    choices = ['lens_distortion']
-    #num_degradations = random.randint(1, 3) # Applica da 1 a 3 degradazioni in sequenza
-    chosen_degradations = random.sample(choices, 1)
+    choices = ['motion_blur', 'gaussian_blur', 'brightness', 'quality', 'contrast', 'colorfulness', 'noisiness', 'chromatic_aberration', 'pixelation', 'color_cast']
+    num_degradations = random.randint(1, 5)
+    chosen_degradations = random.sample(choices, num_degradations)
 
     degraded_image = image
 
     for choice in chosen_degradations:
         if choice == 'motion_blur':
-            kernel_size = random.randint(40, 80)
+            print('motion blur applicato')
+            kernel_size = random.randint(20, 80)
             kernel_motion_blur = np.zeros((kernel_size, kernel_size))
             kernel_motion_blur[int((kernel_size - 1) / 2), :] = np.ones(kernel_size)
             kernel_motion_blur /= kernel_size
@@ -22,32 +23,38 @@ def apply_random_degradation(image):
             degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
 
         elif choice == 'gaussian_blur':
-            blur_amount = random.randint(13, 32) * 2 + 1
+            print('gaussian blur applicato')
+            blur_amount = random.randint(8, 32) * 2 + 1
             image_np = degraded_image.numpy()
             image_np = cv2.GaussianBlur(image_np, (blur_amount, blur_amount), 0)
             degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
 
         elif choice == 'brightness':
-            delta = random.uniform(-1.6, 0.6) 
+            print('brightness applicato')
+            delta = random.uniform(-0.4, 0.4) 
             degraded_image = tf.image.adjust_brightness(degraded_image, delta=delta)
 
         elif choice == 'quality':
+            print('quality applicato')
             degraded_image = tf.cast(degraded_image * 255, tf.uint8)
-            quality = random.randint(7, 11)
+            quality = random.randint(5, 15)
             degraded_image = tf.io.encode_jpeg(degraded_image, quality = quality)
             degraded_image = tf.io.decode_jpeg(degraded_image, channels=3)
             degraded_image = tf.image.convert_image_dtype(degraded_image, tf.float32)
 
         elif choice == 'contrast':
-            contrast_factor = random.uniform(1.5, 2.5)
+            print('contrast applicato')
+            contrast_factor = random.uniform(0.5, 2.5)
             degraded_image = tf.image.adjust_contrast(degraded_image, contrast_factor=contrast_factor)
 
         elif choice == 'colorfulness':
-            saturation_factor = random.uniform(1.2, 5.8)
+            print('colorfulness applicato')
+            saturation_factor = random.uniform(0.2, 5.8)
             degraded_image = tf.image.adjust_saturation(degraded_image, saturation_factor=saturation_factor)
 
         elif choice == 'noisiness':
-            noise_type = random.choice(['complex'])
+            print('noisiness applicato')
+            noise_type = random.choice(['gaussian', 'salt_and_pepper', 'complex'])
             if noise_type == 'gaussian':
                 noise = np.random.normal(0, random.uniform(0.10, 0.25), degraded_image.shape).astype(np.float32) 
                 image_np = degraded_image.numpy() + noise
@@ -71,6 +78,7 @@ def apply_random_degradation(image):
                 degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
 
         elif choice == 'chromatic_aberration':
+            print('chromatic_aberration applicato')
             offset = random.randint(20, 24)
             image_np = degraded_image.numpy()
             if random.random() > 0.5:
@@ -83,6 +91,7 @@ def apply_random_degradation(image):
             degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0)
 
         elif choice == 'pixelation':
+            print('pixelation applicato')
             scale_factor = random.uniform(0.05, 0.15)
             new_height = int(degraded_image.shape[0] * scale_factor)
             new_width = int(degraded_image.shape[1] * scale_factor)
@@ -92,26 +101,12 @@ def apply_random_degradation(image):
             degraded_image = tf.convert_to_tensor(image_resized, dtype=tf.float32)
 
         elif choice == 'color_cast':
+            print('color_cast applicato')
             color_factor = np.array([1.0 + random.uniform(-0.35, 0.35),
                                      1.0 + random.uniform(-0.35, 0.35),
                                      1.0 + random.uniform(-0.35, 0.35)])
             image_np = degraded_image.numpy() * color_factor
             degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
-
-        # elif choice == 'complex_noise': # Rumore complesso (esempio 2: rumore Perlin) - richiede libreria `perlin-numpy` (pip install perlin-numpy)
-        #     try:
-        #         from perlin_numpy import (generate_perlin_noise_2d, generate_fractal_noise_2d)
-        #         noise_scale = random.uniform(5, 20) # Scala del rumore Perlin
-        #         noise_intensity = random.uniform(0.02, 0.08) # Intensità del rumore Perlin
-        #         perlin_noise = generate_fractal_noise_2d((degraded_image.shape[0], degraded_image.shape[1]), (noise_scale, noise_scale), octaves=random.randint(3, 6))
-        #         perlin_noise = (perlin_noise - np.min(perlin_noise)) / (np.max(perlin_noise) - np.min(perlin_noise)) # Normalizza a [0, 1]
-        #         perlin_noise = (perlin_noise - 0.5) * 2 * noise_intensity # Centra intorno a 0 e scala intensità
-        #         noise = np.repeat(perlin_noise[:, :, np.newaxis], 3, axis=2) # Ripeti per 3 canali
-        #         image_np = degraded_image.numpy() + noise
-        #         degraded_image = tf.convert_to_tensor(image_np, dtype=tf.float32)
-        #     except ImportError:
-        #         print("Warning: perlin-numpy not installed, complex_noise skipped.")
-        #         pass # Se perlin-numpy non è installato, salta questo effetto
         degraded_image = tf.clip_by_value(degraded_image, 0.0, 1.0)
 
     return degraded_image
