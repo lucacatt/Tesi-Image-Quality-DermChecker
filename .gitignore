@@ -2,3 +2,5 @@ dataset/
 selection/
 venv_test/
 images/
+degraded/
+sharp/
