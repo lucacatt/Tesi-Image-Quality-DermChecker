@@ -1,11 +1,10 @@
 import tensorflow as tf
 import os
 import random
-import numpy as np
 import shutil
-import cv2
+import numpy as np
+import pandas as pd
 
-# 1) Funzione per applicare degradazioni casuali
 def apply_random_degradation(image):
     # Se arriva un tf.Tensor, lo convertiamo subito in numpy
     if isinstance(image, tf.Tensor):
@@ -126,8 +125,49 @@ def apply_random_degradation(image):
     degraded_image = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
     return degraded_image
 
+# 2) Funzione per creare il dataset di test (20% non usato dal train set)
+def create_test_set(original_folder, sharp_folder, degraded_folder, test_folder, test_size=0.2):
+    # Ottieni tutte le immagini dalla cartella originale e dalle sottocartelle
+    all_images = []
+    for subdir, _, files in os.walk(original_folder):
+        for file in files:
+            if file.lower().endswith(('.png', '.jpg', '.jpeg')):  # Considera solo immagini
+                all_images.append(os.path.join(subdir, file))
 
-# 2) Classe Dataset per caricare il test set
+    # Ottieni le immagini già presenti nelle cartelle sharp e degraded
+    sharp_images = [os.path.join(sharp_folder, f) for f in os.listdir(sharp_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    degraded_images = [os.path.join(degraded_folder, f) for f in os.listdir(degraded_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
+    # Rimuovi le immagini che sono già state usate per il training
+    remaining_images = [img for img in all_images if img not in sharp_images and img not in degraded_images]
+
+    # Calcola il numero di immagini da prendere per il test (20% delle immagini rimanenti)
+    test_images = random.sample(remaining_images, int(len(remaining_images) * test_size))
+
+    # Crea la cartella per il test set se non esiste
+    if not os.path.exists(test_folder):
+        os.makedirs(test_folder)
+
+    # Crea le sottocartelle sharp e degraded per il test
+    test_sharp_folder = os.path.join(test_folder, 'sharp')
+    test_degraded_folder = os.path.join(test_folder, 'degraded')
+
+    if not os.path.exists(test_sharp_folder):
+        os.makedirs(test_sharp_folder)
+
+    if not os.path.exists(test_degraded_folder):
+        os.makedirs(test_degraded_folder)
+
+    # Copia le immagini di test nelle rispettive cartelle (sharp o degraded)
+    for img_path in test_images:
+        if 'sharp' in img_path:
+            shutil.copy(img_path, test_sharp_folder)
+        else:
+            shutil.copy(img_path, test_degraded_folder)
+
+    return test_images
+
+# 3) Classe Dataset per caricare il test set
 class ImageTestDataset(tf.keras.utils.Sequence):
     def __init__(self, image_paths, batch_size=32, img_size=(224, 224)):
         self.image_paths = image_paths
@@ -137,59 +177,54 @@ class ImageTestDataset(tf.keras.utils.Sequence):
     def __getitem__(self, index):
         batch_paths = self.image_paths[index * self.batch_size: (index + 1) * self.batch_size]
         images = []
-        labels = []
 
         for img_path in batch_paths:
             image = tf.keras.utils.load_img(img_path, target_size=self.img_size)
             image = tf.keras.utils.img_to_array(image) / 255.0
-            image = tf.convert_to_tensor(image, dtype=tf.float32)
-
-            # Se l'immagine è nella cartella 'sharp', è nitida (label=1)
-            # Se è nella cartella 'degraded', è degradata (label=0)
-            if 'sharp' in img_path:
-                label = 1
-            else:
-                label = 0
-
             images.append(image)
-            labels.append(label)
 
-        return np.array(images), np.array(labels)
+        return np.array(images)
 
     def __len__(self):
         return int(np.floor(len(self.image_paths) / self.batch_size))
 
-
-# 3) Carica il modello salvato
-def load_model(model_path='my_model.h5'):
+# 4) Carica il modello salvato
+def load_model(model_path='modello.h5'):
     model = tf.keras.models.load_model(model_path)
     return model
 
+# 5) Funzione per eseguire le previsioni su ogni immagine e salvare i risultati in un CSV
+def predict_and_save(model, test_dataset, output_csv='predictions.csv'):
+    predictions = []
+    image_paths = test_dataset.image_paths
 
-# 4) Funzione per caricare e testare il modello sul test set
-def test_model(model, test_dataset):
-    test_loss, test_acc = model.evaluate(test_dataset, verbose=1)
-    print(f"Test accuracy: {test_acc}")
-    return test_loss, test_acc
+    for i in range(len(test_dataset)):
+        batch_images = test_dataset[i]
+        batch_preds = model.predict(batch_images)
+        for img_path, pred in zip(image_paths[i * test_dataset.batch_size: (i + 1) * test_dataset.batch_size], batch_preds):
+            predictions.append([img_path, pred[0]])
 
+    # Creazione di un DataFrame e salvataggio su CSV
+    df = pd.DataFrame(predictions, columns=['Image_Path', 'Prediction'])
+    df.to_csv(output_csv, index=False)
+    print(f"Risultati salvati in {output_csv}")
 
-# 5) Esegui il test del modello
+# 6) Esegui il processo
 if __name__ == "__main__":
-    # Carica le immagini di test dalle cartelle sharp e degraded
-    sharp_folder = "sharp"
-    degraded_folder = "degraded"
+    # Percorso alla cartella con tutte le immagini originali
+    original_folder = 'images'  # Sostituisci con il percorso corretto
+    sharp_folder = 'sharp'  # Cartella con immagini nitide per il training
+    degraded_folder = 'degraded'  # Cartella con immagini degradate per il training
+    test_folder = 'test'  # Cartella per le immagini di test create
 
-    sharp_images = [os.path.join(sharp_folder, f) for f in os.listdir(sharp_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    degraded_images = [os.path.join(degraded_folder, f) for f in os.listdir(degraded_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-
-    # Unisci tutte le immagini per il test set
-    test_images = sharp_images + degraded_images
+    # Crea il test set (20% delle immagini non usate per il training)
+    test_images = create_test_set(original_folder, sharp_folder, degraded_folder, test_folder)
 
     # Crea il dataset di test
     test_dataset = ImageTestDataset(test_images, batch_size=32, img_size=(224, 224))
 
     # Carica il modello
-    model = load_model('my_model.h5')
+    model = load_model('modello.h5')
 
-    # Esegui il test sul modello
-    test_model(model, test_dataset)
+    # Esegui le previsioni e salva i risultati
+    predict_and_save(model, test_dataset, output_csv='predictions.csv')

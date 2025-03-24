@@ -6,31 +6,26 @@ import shutil
 import cv2
 from tensorflow.keras import regularizers
 
-################################################################################
-# 1) FUNZIONE PER APPLICARE LA DEGRADAZIONE
-################################################################################
 def apply_random_degradation(image):
-    # Se arriva un tf.Tensor, lo convertiamo subito in numpy
+    # se arriva un tf.Tensor, lo converte in numpy
     if isinstance(image, tf.Tensor):
         image = image.numpy()
 
     degraded_image = image
 
-    # Possibili degradazioni
     choices = [
         'motion_blur', 'gaussian_blur', 'brightness', 'quality',
         'contrast', 'colorfulness', 'noisiness', 'chromatic_aberration',
         'pixelation', 'color_cast'
     ]
 
-    # Scegli da 1 a 5 degradazioni casuali da applicare
     num_degradations = random.randint(1, 5)
     chosen_degradations = random.sample(choices, num_degradations)
 
     for choice in chosen_degradations:
         if choice == 'motion_blur':
             print('motion blur applicato')
-            kernel_size = random.randint(20, 60)  # ridotto l'intervallo
+            kernel_size = random.randint(20, 60)
             kernel_motion_blur = np.zeros((kernel_size, kernel_size))
             kernel_motion_blur[int((kernel_size - 1) / 2), :] = np.ones(kernel_size)
             kernel_motion_blur /= kernel_size
@@ -38,7 +33,7 @@ def apply_random_degradation(image):
 
         elif choice == 'gaussian_blur':
             print('gaussian blur applicato')
-            blur_amount = random.randint(3, 15) * 2 + 1  # blur non troppo estremo
+            blur_amount = random.randint(3, 15) * 2 + 1
             degraded_image = cv2.GaussianBlur(degraded_image, (blur_amount, blur_amount), 0)
 
         elif choice == 'brightness':
@@ -109,9 +104,12 @@ def apply_random_degradation(image):
             scale_factor = random.uniform(0.05, 0.15)
             new_height = int(degraded_image.shape[0] * scale_factor)
             new_width = int(degraded_image.shape[1] * scale_factor)
-            image_small = cv2.resize(degraded_image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
-            degraded_image = cv2.resize(image_small, (degraded_image.shape[1], degraded_image.shape[0]),
+            try:
+                image_small = cv2.resize(degraded_image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
+                degraded_image = cv2.resize(image_small, (degraded_image.shape[1], degraded_image.shape[0]),
                                         interpolation=cv2.INTER_NEAREST)
+            except Exception as e:
+                print('errore pixelation non applicato')
 
         elif choice == 'color_cast':
             print('color_cast applicato')
@@ -122,94 +120,116 @@ def apply_random_degradation(image):
             ], dtype=np.float32)
             degraded_image = degraded_image * color_factor
 
-        # Clip finale a [0,1]
         degraded_image = np.clip(degraded_image, 0.0, 1.0)
 
-    # Converti di nuovo in tf.Tensor
     degraded_image = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
     return degraded_image
 
-################################################################################
-# 2) CREAZIONE DATASET DINAMICO
-################################################################################
 class ImageDataset(tf.keras.utils.Sequence):
-    def __init__(self, root_dir, batch_size=32, img_size=(224, 224), test_split=0.2, shuffle=True):
-        self.root_dir = root_dir
+    def __init__(self, sharp_dir, degraded_dir, batch_size=32, img_size=(224, 224), test_split=0.2, shuffle=True):
+        self.sharp_dir = sharp_dir
+        self.degraded_dir = degraded_dir
         self.batch_size = batch_size
         self.img_size = img_size
         self.test_split = test_split
         self.shuffle = shuffle
-        self.image_paths = self.get_image_paths(root_dir)
+
+        # Ottieni i percorsi delle immagini dalle due cartelle
+        sharp_images = self.get_image_paths(sharp_dir)
+        degraded_images = self.get_image_paths(degraded_dir)
+
+        # Abbina le immagini sharp con le rispettive immagini degraded (presupponendo che abbiano lo stesso nome)
+        self.image_paths = [(sharp_img, degraded_img) for sharp_img, degraded_img in zip(sharp_images, degraded_images)]
+
+        # Dividi i dati in training e test
         self.train_paths, self.test_paths = self.split_data()
         self.on_epoch_end()
 
-    def get_image_paths(self, root_dir):
+    def get_image_paths(self, dir_path):
         image_paths = []
-        for subdir, _, files in os.walk(root_dir):
+        for subdir, _, files in os.walk(dir_path):
             for file in files:
                 if file.lower().endswith(('.png', '.jpg', '.jpeg')):
                     image_paths.append(os.path.join(subdir, file))
         return image_paths
 
     def split_data(self):
+        # Mescola le immagini in modo casuale
         random.shuffle(self.image_paths)
+
+        # Calcola l'indice per la divisione del set di addestramento e di test
         split_idx = int(len(self.image_paths) * (1 - self.test_split))
         train_paths = self.image_paths[:split_idx]
         test_paths = self.image_paths[split_idx:]
+
         return train_paths, test_paths
 
     def __getitem__(self, index):
         batch_paths = self.train_paths[index * self.batch_size: (index + 1) * self.batch_size]
-        images = []
+        sharp_images_batch = []
+        degraded_images_batch = []
         labels = []
 
-        for img_path in batch_paths:
-            # Carica l'immagine
-            image = tf.keras.utils.load_img(img_path, target_size=self.img_size)
-            image = tf.keras.utils.img_to_array(image) / 255.0
-            image = tf.convert_to_tensor(image, dtype=tf.float32)
+        for sharp_path, degraded_path in batch_paths:
+            # Carica l'immagine sharp e degraded
+            sharp_image = tf.keras.utils.load_img(sharp_path, target_size=self.img_size)
+            sharp_image = tf.keras.utils.img_to_array(sharp_image) / 255.0
+            sharp_image = tf.convert_to_tensor(sharp_image, dtype=tf.float32)
 
-            # 50% delle volte l'immagine resta nitida, altrimenti degradazione
-            if random.random() > 0.5:
-                degraded_image = image
-                label = 1  # nitida
+            degraded_image = tf.keras.utils.load_img(degraded_path, target_size=self.img_size)
+            degraded_image = tf.keras.utils.img_to_array(degraded_image) / 255.0
+            degraded_image = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
+
+            # Aggiungi le immagini alle liste separate
+            sharp_images_batch.append(sharp_image)
+            degraded_images_batch.append(degraded_image)
+            if "sharp" in sharp_path:
+                labels.append(1)  # 1 per immagini sharp
             else:
-                degraded_image = apply_random_degradation(image)
-                label = 0  # degradata
+                labels.append(0)  # 0 per immagini degraded
 
-            images.append(degraded_image)
-            labels.append(label)
+        # Convert lists of tensors to tensors
+        sharp_images_batch = tf.stack(sharp_images_batch)
+        degraded_images_batch = tf.stack(degraded_images_batch)
+        labels = tf.convert_to_tensor(labels, dtype=tf.int32) # Assuming labels are integers
 
-        return np.array(images), np.array(labels)
+        return (sharp_images_batch, degraded_images_batch), labels # <--- Return a TUPLE for inputs
 
     def __len__(self):
         return int(np.floor(len(self.train_paths) / self.batch_size))
 
     def on_epoch_end(self):
         if self.shuffle:
+            # Mescola i dati dopo ogni epoca
             random.shuffle(self.train_paths)
 
-################################################################################
-# 3) FUNZIONE PER CREARE CARTELLE 'sharp' E 'degraded' (TEST SET FISSO)
-################################################################################
-def create_folders_and_split_dataset(image_paths):
+def create_folders_and_split_dataset(root_dir):
+    # Crea le cartelle sharp e degraded se non esistono
     sharp_folder = "sharp"
     degraded_folder = "degraded"
+
     if not os.path.exists(sharp_folder):
         os.makedirs(sharp_folder)
     if not os.path.exists(degraded_folder):
         os.makedirs(degraded_folder)
 
-    test_set_size = int(len(image_paths) * 0.2)
-    test_images = random.sample(image_paths, test_set_size)
-    train_images = [img for img in image_paths if img not in test_images]
+    # Trova tutte le immagini in tutte le sottocartelle
+    image_paths = []
+    for subdir, _, files in os.walk(root_dir):
+        for file in files:
+            if file.lower().endswith(('.png', '.jpg', '.jpeg')):
+                image_paths.append(os.path.join(subdir, file))
 
-    # Copia il 20% delle immagini originali in 'sharp'
-    for img_path in test_images:
+    # Calcola l'80% delle immagini per il training
+    train_set_size = int(len(image_paths) * 0.8)
+    train_images = random.sample(image_paths, train_set_size)  # Seleziona casualmente l'80% delle immagini per il training
+
+    # Copia l'80% delle immagini in 'sharp' (queste saranno le immagini nitide)
+    for img_path in train_images:
         shutil.copy(img_path, sharp_folder)
 
-    # Applica un degrado e salva in 'degraded'
-    for img_path in test_images:
+    # Applica un degrado a tutte le immagini selezionate per l'80% e salvale in 'degraded'
+    for img_path in train_images:
         image = tf.keras.utils.load_img(img_path)
         image = tf.keras.utils.img_to_array(image) / 255.0
         degraded_image = apply_random_degradation(image)
@@ -217,59 +237,61 @@ def create_folders_and_split_dataset(image_paths):
         save_path = os.path.join(degraded_folder, os.path.basename(img_path))
         tf.keras.preprocessing.image.save_img(save_path, degraded_image)
 
-    return train_images, test_images
+    return train_images
 
-################################################################################
-# 4) DEFINIZIONE DEL MODELLO CNN CON REGOLARIZZAZIONE E DROPOUT
-################################################################################
 def create_model(input_shape=(224, 224, 3)):
-    model = tf.keras.Sequential([
-        tf.keras.layers.Conv2D(
-            32, (3, 3), activation='relu', input_shape=input_shape,
-            kernel_regularizer=regularizers.l2(1e-4)
-        ),
-        tf.keras.layers.MaxPooling2D((2, 2)),
-        tf.keras.layers.Dropout(0.25),
+    # Definiamo i due input separati per l'immagine originale e quella degradata
+    input_sharp = tf.keras.Input(shape=input_shape, name="sharp_image")
+    input_degraded = tf.keras.Input(shape=input_shape, name="degraded_image")
 
-        tf.keras.layers.Conv2D(
-            64, (3, 3), activation='relu',
-            kernel_regularizer=regularizers.l2(1e-4)
-        ),
-        tf.keras.layers.MaxPooling2D((2, 2)),
-        tf.keras.layers.Dropout(0.25),
+    # Concatenazione delle due immagini lungo l'asse dei canali (axis=-1)
+    concatenated = tf.keras.layers.Concatenate(axis=-1)([input_sharp, input_degraded])
 
-        tf.keras.layers.Conv2D(
-            128, (3, 3), activation='relu',
-            kernel_regularizer=regularizers.l2(1e-4)
-        ),
-        tf.keras.layers.MaxPooling2D((2, 2)),
-        tf.keras.layers.Flatten(),
+    # Prima convoluzione
+    x = tf.keras.layers.Conv2D(
+        32, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(1e-4)
+    )(concatenated)
+    x = tf.keras.layers.MaxPooling2D((2, 2))(x)
+    x = tf.keras.layers.Dropout(0.25)(x)
 
-        tf.keras.layers.Dense(
-            128, activation='relu',
-            kernel_regularizer=regularizers.l2(1e-4)
-        ),
-        tf.keras.layers.Dropout(0.5),
-        tf.keras.layers.Dense(1, activation='sigmoid')
-    ])
+    # Seconda convoluzione
+    x = tf.keras.layers.Conv2D(
+        64, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(1e-4)
+    )(x)
+    x = tf.keras.layers.MaxPooling2D((2, 2))(x)
+    x = tf.keras.layers.Dropout(0.25)(x)
+
+    # Terza convoluzione
+    x = tf.keras.layers.Conv2D(
+        128, (3, 3), activation='relu', kernel_regularizer=regularizers.l2(1e-4)
+    )(x)
+    x = tf.keras.layers.MaxPooling2D((2, 2))(x)
+    x = tf.keras.layers.Flatten()(x)
+
+    # Strato denso
+    x = tf.keras.layers.Dense(
+        128, activation='relu', kernel_regularizer=regularizers.l2(1e-4)
+    )(x)
+    x = tf.keras.layers.Dropout(0.5)(x)
+
+    # Uscita
+    output = tf.keras.layers.Dense(1, activation='sigmoid')(x)
+
+    # Crea il modello
+    model = tf.keras.Model(inputs=[input_sharp, input_degraded], outputs=output)
+
     return model
 
-################################################################################
-# 5) ISTANZIAZIONE DEL DATASET, SUDDIVISIONE E TRAINING
-################################################################################
 if __name__ == "__main__":
-    root_dir = "L:\\Tesi Image Quality DermChecker\\Tesi-Image-Quality-DermChecker\\"
-    
-    # Crea un oggetto dataset per scoprire i percorsi
-    dataset = ImageDataset(root_dir)
-    # Suddivisione in train e test set fisso (cartelle 'sharp' e 'degraded')
-    train_paths, test_paths = create_folders_and_split_dataset(dataset.get_image_paths(root_dir))
+    root_dir = "L:\\Tesi Image Quality DermChecker\\Tesi-Image-Quality-DermChecker"
 
-    # Dataset dinamico per training e test
-    train_dataset = ImageDataset(root_dir, batch_size=32, img_size=(224,224))
-    test_dataset = ImageDataset(root_dir, batch_size=32, img_size=(224,224), shuffle=False)
+    # 1. Creazione delle cartelle di test e training
+    #train_images = create_folders_and_split_dataset(root_dir)
 
-    # Crea e compila il modello
+    # 2. Crea il dataset di training
+    train_dataset = ImageDataset(os.path.join(root_dir, 'sharp'), os.path.join(root_dir, 'degraded'), batch_size=32, img_size=(224, 224))
+
+    # 3. Crea e compila il modello
     model = create_model()
     model.compile(
         optimizer='adam',
@@ -277,16 +299,11 @@ if __name__ == "__main__":
         metrics=['accuracy']
     )
 
-    # Addestramento (aumenta pure le epoche se serve)
+    # 4. Addestramento (senza validation)
     model.fit(
         train_dataset,
-        validation_data=test_dataset,
         epochs=30
     )
 
-    # Valutazione finale
-    test_loss, test_acc = model.evaluate(test_dataset)
-    print(f"Test accuracy: {test_acc}")
-
-    # Salvataggio del modello
-    model.save('my_model.h5')
+    # 5. Salvataggio del modello
+    model.save('modello.h5')
