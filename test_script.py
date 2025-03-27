@@ -1,230 +1,150 @@
 import tensorflow as tf
 import os
-import random
-import shutil
 import numpy as np
-import pandas as pd
+import time
 
-def apply_random_degradation(image):
-    # Se arriva un tf.Tensor, lo convertiamo subito in numpy
-    if isinstance(image, tf.Tensor):
-        image = image.numpy()
+# --- Funzione load_and_create_inference_model (identica a prima) ---
+def load_and_create_inference_model(original_model_path='modello.h5', input_shape=(224, 224, 3)):
+    """
+    Carica il modello originale a due input e crea un nuovo modello
+    per l'inferenza a singolo input, simulando la concatenazione interna.
+    """
+    print(f"Caricamento modello originale da: {original_model_path}")
+    try:
+        original_model = tf.keras.models.load_model(original_model_path)
+        print("Modello originale caricato con successo.")
+    except Exception as e:
+        print(f"ERRORE: Impossibile caricare il modello originale da {original_model_path}. Dettagli: {e}")
+        return None
 
-    degraded_image = image
+    print("Creazione del modello di inferenza single-input...")
+    try:
+        single_input = tf.keras.Input(shape=input_shape, name="inference_input")
+        concatenated_input = tf.keras.layers.Concatenate(axis=-1, name="inference_concatenate")([single_input, single_input])
 
-    # Possibili degradazioni
-    choices = [
-        'motion_blur', 'gaussian_blur', 'brightness', 'quality',
-        'contrast', 'colorfulness', 'noisiness', 'chromatic_aberration',
-        'pixelation', 'color_cast'
-    ]
+        first_processing_layer = None
+        found_concat = False
+        for layer in original_model.layers:
+            if isinstance(layer, tf.keras.layers.Concatenate):
+                 found_concat = True
+                 continue
+            if found_concat:
+                 first_processing_layer = layer
+                 break
 
-    # Scegli da 1 a 5 degradazioni casuali da applicare
-    num_degradations = random.randint(1, 5)
-    chosen_degradations = random.sample(choices, num_degradations)
+        if first_processing_layer is None:
+            print("ERRORE: Impossibile trovare il layer Concatenate o il layer successivo.")
+            return None
 
-    for choice in chosen_degradations:
-        if choice == 'motion_blur':
-            print('motion blur applicato')
-            kernel_size = random.randint(20, 60)  # ridotto l'intervallo
-            kernel_motion_blur = np.zeros((kernel_size, kernel_size))
-            kernel_motion_blur[int((kernel_size - 1) / 2), :] = np.ones(kernel_size)
-            kernel_motion_blur /= kernel_size
-            degraded_image = cv2.filter2D(degraded_image, -1, kernel_motion_blur)
+        print(f"Collegamento dell'input duplicato al layer '{first_processing_layer.name}' del modello originale.")
 
-        elif choice == 'gaussian_blur':
-            print('gaussian blur applicato')
-            blur_amount = random.randint(3, 15) * 2 + 1  # blur non troppo estremo
-            degraded_image = cv2.GaussianBlur(degraded_image, (blur_amount, blur_amount), 0)
+        current_tensor = concatenated_input
+        output_tensor = None
+        processing_started = False
+        for layer in original_model.layers:
+             if layer.name == first_processing_layer.name:
+                 processing_started = True
+             if processing_started:
+                 current_tensor = layer(current_tensor)
+                 output_tensor = current_tensor
 
-        elif choice == 'brightness':
-            print('brightness applicato')
-            delta = random.uniform(-0.3, 0.3)
-            tmp_tensor = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
-            tmp_tensor = tf.image.adjust_brightness(tmp_tensor, delta)
-            degraded_image = tmp_tensor.numpy()
+        if output_tensor is None:
+             print("ERRORE: Processo di collegamento fallito.")
+             return None
 
-        elif choice == 'quality':
-            print('quality applicato')
-            tmp_tensor = tf.convert_to_tensor(degraded_image * 255, dtype=tf.uint8)
-            quality = random.randint(5, 25)
-            tmp_tensor = tf.io.encode_jpeg(tmp_tensor, quality=quality)
-            tmp_tensor = tf.io.decode_jpeg(tmp_tensor, channels=3)
-            tmp_tensor = tf.image.convert_image_dtype(tmp_tensor, tf.float32)
-            degraded_image = tmp_tensor.numpy()
+        inference_model = tf.keras.Model(inputs=single_input, outputs=output_tensor, name="inference_model")
+        print("Modello di inferenza single-input creato con successo.")
+        # inference_model.summary() # Decommenta per vedere la struttura
 
-        elif choice == 'contrast':
-            print('contrast applicato')
-            contrast_factor = random.uniform(0.5, 2.5)
-            tmp_tensor = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
-            tmp_tensor = tf.image.adjust_contrast(tmp_tensor, contrast_factor)
-            degraded_image = tmp_tensor.numpy()
+        return inference_model
 
-        elif choice == 'colorfulness':
-            print('colorfulness applicato')
-            saturation_factor = random.uniform(0.3, 4.0)
-            tmp_tensor = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
-            tmp_tensor = tf.image.adjust_saturation(tmp_tensor, saturation_factor)
-            degraded_image = tmp_tensor.numpy()
+    except Exception as e:
+        print(f"ERRORE durante la creazione del modello di inferenza: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
 
-        elif choice == 'noisiness':
-            print('noisiness applicato')
-            noise_type = random.choice(['gaussian', 'salt_and_pepper', 'complex'])
-            if noise_type == 'gaussian':
-                noise = np.random.normal(0, random.uniform(0.05, 0.2), degraded_image.shape).astype(np.float32)
-                degraded_image = degraded_image + noise
-            elif noise_type == 'salt_and_pepper':
-                s_vs_p = 0.5
-                amount = random.uniform(0.05, 0.15)
-                out = np.copy(degraded_image)
-                num_salt = np.ceil(amount * degraded_image.size * s_vs_p)
-                coords = [np.random.randint(0, i - 1, int(num_salt)) for i in degraded_image.shape]
-                out[tuple(coords)] = 1.0
-                num_pepper = np.ceil(amount * degraded_image.size * (1. - s_vs_p))
-                coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in degraded_image.shape]
-                out[tuple(coords)] = 0.0
-                degraded_image = out
-            elif noise_type == 'complex':
-                gaussian_noise = np.random.normal(0, random.uniform(0.05, 0.2), degraded_image.shape).astype(np.float32)
-                uniform_noise = np.random.uniform(-0.3, 0.3, degraded_image.shape).astype(np.float32)
-                noise = gaussian_noise + uniform_noise
-                degraded_image = degraded_image + noise
+# --- Funzione per caricare e preparare UNA singola immagine ---
+def load_and_prepare_image(image_path, img_size=(224, 224)):
+    """Carica un'immagine, la ridimensiona e normalizza."""
+    try:
+        print(f"Caricamento immagine da: {image_path}")
+        img = tf.keras.utils.load_img(image_path, target_size=img_size, interpolation='lanczos')
+        img_array = tf.keras.utils.img_to_array(img)
+        img_array = img_array / 255.0 # Normalizza a [0, 1]
+        # Aggiunge la dimensione del batch (il modello si aspetta un batch, anche se di 1)
+        img_batch = np.expand_dims(img_array, axis=0)
+        print(f"Immagine caricata e preparata con shape: {img_batch.shape}")
+        return tf.convert_to_tensor(img_batch, dtype=tf.float32)
+    except FileNotFoundError:
+        print(f"ERRORE: Immagine non trovata: {image_path}")
+        return None
+    except Exception as e:
+        print(f"ERRORE durante caricamento/preparazione immagine {image_path}: {e}")
+        return None
 
-        elif choice == 'chromatic_aberration':
-            print('chromatic_aberration applicato')
-            offset = random.randint(5, 15)
-            if random.random() > 0.5:
-                degraded_image[:, :, 0] = np.roll(degraded_image[:, :, 0], offset, axis=1)
-                degraded_image[:, :, 2] = np.roll(degraded_image[:, :, 2], -offset, axis=1)
-            else:
-                degraded_image[:, :, 0] = np.roll(degraded_image[:, :, 0], -offset, axis=1)
-                degraded_image[:, :, 2] = np.roll(degraded_image[:, :, 2], offset, axis=1)
-
-        elif choice == 'pixelation':
-            print('pixelation applicato')
-            scale_factor = random.uniform(0.05, 0.15)
-            new_height = int(degraded_image.shape[0] * scale_factor)
-            new_width = int(degraded_image.shape[1] * scale_factor)
-            image_small = cv2.resize(degraded_image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
-            degraded_image = cv2.resize(image_small, (degraded_image.shape[1], degraded_image.shape[0]),
-                                        interpolation=cv2.INTER_NEAREST)
-
-        elif choice == 'color_cast':
-            print('color_cast applicato')
-            color_factor = np.array([
-                1.0 + random.uniform(-0.3, 0.3),
-                1.0 + random.uniform(-0.3, 0.3),
-                1.0 + random.uniform(-0.3, 0.3)
-            ], dtype=np.float32)
-            degraded_image = degraded_image * color_factor
-
-        # Clip finale a [0,1]
-        degraded_image = np.clip(degraded_image, 0.0, 1.0)
-
-    # Converti di nuovo in tf.Tensor
-    degraded_image = tf.convert_to_tensor(degraded_image, dtype=tf.float32)
-    return degraded_image
-
-# 2) Funzione per creare il dataset di test (20% non usato dal train set)
-def create_test_set(original_folder, sharp_folder, degraded_folder, test_folder, test_size=0.2):
-    # Ottieni tutte le immagini dalla cartella originale e dalle sottocartelle
-    all_images = []
-    for subdir, _, files in os.walk(original_folder):
-        for file in files:
-            if file.lower().endswith(('.png', '.jpg', '.jpeg')):  # Considera solo immagini
-                all_images.append(os.path.join(subdir, file))
-
-    # Ottieni le immagini già presenti nelle cartelle sharp e degraded
-    sharp_images = [os.path.join(sharp_folder, f) for f in os.listdir(sharp_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    degraded_images = [os.path.join(degraded_folder, f) for f in os.listdir(degraded_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-
-    # Rimuovi le immagini che sono già state usate per il training
-    remaining_images = [img for img in all_images if img not in sharp_images and img not in degraded_images]
-
-    # Calcola il numero di immagini da prendere per il test (20% delle immagini rimanenti)
-    test_images = random.sample(remaining_images, int(len(remaining_images) * test_size))
-
-    # Crea la cartella per il test set se non esiste
-    if not os.path.exists(test_folder):
-        os.makedirs(test_folder)
-
-    # Crea le sottocartelle sharp e degraded per il test
-    test_sharp_folder = os.path.join(test_folder, 'sharp')
-    test_degraded_folder = os.path.join(test_folder, 'degraded')
-
-    if not os.path.exists(test_sharp_folder):
-        os.makedirs(test_sharp_folder)
-
-    if not os.path.exists(test_degraded_folder):
-        os.makedirs(test_degraded_folder)
-
-    # Copia le immagini di test nelle rispettive cartelle (sharp o degraded)
-    for img_path in test_images:
-        if 'sharp' in img_path:
-            shutil.copy(img_path, test_sharp_folder)
-        else:
-            shutil.copy(img_path, test_degraded_folder)
-
-    return test_images
-
-# 3) Classe Dataset per caricare il test set
-class ImageTestDataset(tf.keras.utils.Sequence):
-    def __init__(self, image_paths, batch_size=32, img_size=(224, 224)):
-        self.image_paths = image_paths
-        self.batch_size = batch_size
-        self.img_size = img_size
-
-    def __getitem__(self, index):
-        batch_paths = self.image_paths[index * self.batch_size: (index + 1) * self.batch_size]
-        images = []
-
-        for img_path in batch_paths:
-            image = tf.keras.utils.load_img(img_path, target_size=self.img_size)
-            image = tf.keras.utils.img_to_array(image) / 255.0
-            images.append(image)
-
-        return np.array(images)
-
-    def __len__(self):
-        return int(np.floor(len(self.image_paths) / self.batch_size))
-
-# 4) Carica il modello salvato
-def load_model(model_path='modello.h5'):
-    model = tf.keras.models.load_model(model_path)
-    return model
-
-# 5) Funzione per eseguire le previsioni su ogni immagine e salvare i risultati in un CSV
-def predict_and_save(model, test_dataset, output_csv='predictions.csv'):
-    predictions = []
-    image_paths = test_dataset.image_paths
-
-    for i in range(len(test_dataset)):
-        batch_images = test_dataset[i]
-        batch_preds = model.predict(batch_images)
-        for img_path, pred in zip(image_paths[i * test_dataset.batch_size: (i + 1) * test_dataset.batch_size], batch_preds):
-            predictions.append([img_path, pred[0]])
-
-    # Creazione di un DataFrame e salvataggio su CSV
-    df = pd.DataFrame(predictions, columns=['Image_Path', 'Prediction'])
-    df.to_csv(output_csv, index=False)
-    print(f"Risultati salvati in {output_csv}")
-
-# 6) Esegui il processo
+# --- Blocco Principale Semplificato ---
 if __name__ == "__main__":
-    # Percorso alla cartella con tutte le immagini originali
-    original_folder = 'images'  # Sostituisci con il percorso corretto
-    sharp_folder = 'sharp'  # Cartella con immagini nitide per il training
-    degraded_folder = 'degraded'  # Cartella con immagini degradate per il training
-    test_folder = 'test'  # Cartella per le immagini di test create
 
-    # Crea il test set (20% delle immagini non usate per il training)
-    test_images = create_test_set(original_folder, sharp_folder, degraded_folder, test_folder)
+    # --- CONFIGURAZIONE ---
+    original_model_h5_path = 'modello.h5'
+    # SPECIFICA QUI IL PERCORSO ESATTO DELL'IMMAGINE CHE VUOI TESTARE
+    image_to_test_path = 'L:\\Tesi Image Quality DermChecker\\dataset\\motion_blurred\\18_XIAOMI-REDMI-5-PLUS_M.jpg'
+    input_image_size = (224, 224) # Assicurati che coincida con l'input del modello
 
-    # Crea il dataset di test
-    test_dataset = ImageTestDataset(test_images, batch_size=32, img_size=(224, 224))
+    print("--- Inizio Script Test Semplificato Single-Input ---")
+    start_time = time.time()
 
-    # Carica il modello
-    model = load_model('modello.h5')
+    # 1. Carica e crea il modello di inferenza single-input
+    print("\n--- Fase 1: Creazione Modello Inferenza ---")
+    inference_model = load_and_create_inference_model(
+        original_model_path=original_model_h5_path,
+        input_shape=(input_image_size[0], input_image_size[1], 3)
+    )
 
-    # Esegui le previsioni e salva i risultati
-    predict_and_save(model, test_dataset, output_csv='predictions.csv')
+    if inference_model:
+        # 2. Carica e prepara l'immagine singola
+        print("\n--- Fase 2: Caricamento Immagine Test ---")
+        # Assicurati che il percorso sia valido prima di procedere
+        if not os.path.exists(image_to_test_path):
+             print(f"ERRORE FATALE: Il percorso immagine specificato non esiste: {image_to_test_path}")
+        else:
+            image_tensor = load_and_prepare_image(image_to_test_path, img_size=input_image_size)
+
+            if image_tensor is not None:
+                # 3. Esegui la predizione
+                print("\n--- Fase 3: Esecuzione Predizione ---")
+                try:
+                    prediction_start_time = time.time()
+                    # Esegui predict sull'UNICO tensore immagine (che ha già la dimensione batch)
+                    prediction = inference_model.predict(image_tensor, verbose=0)
+                    prediction_time = time.time() - prediction_start_time
+
+                    # Estrai il valore scalare della predizione (assumendo output Dense(1))
+                    prediction_score = prediction[0][0] if prediction.ndim >= 2 else prediction[0]
+
+                    print("\n--- RISULTATO ---")
+                    print(f"Immagine Testata: {image_to_test_path}")
+                    print(f"Punteggio Predetto: {prediction_score:.6f}")
+                    print(f"(Tempo di predizione: {prediction_time:.4f} secondi)")
+
+                    # Interpretazione (DA ADATTARE IN BASE AL TRAINING!)
+                    # Questo è solo un ESEMPIO di interpretazione, potrebbe essere l'opposto!
+                    if prediction_score < 0.5:
+                        print("Interpretazione Esempio: Il modello suggerisce qualità ALTA (punteggio basso).")
+                    else:
+                        print("Interpretazione Esempio: Il modello suggerisce qualità BASSA (punteggio alto).")
+                    print("NOTA: L'interpretazione dipende da come il modello è stato addestrato (label 0 vs 1).")
+
+
+                except Exception as e:
+                    print(f"ERRORE durante la predizione: {e}")
+                    import traceback
+                    traceback.print_exc()
+            else:
+                print("\nImpossibile procedere con la predizione: Errore caricamento immagine.")
+    else:
+        print("\nImpossibile procedere: Creazione del modello di inferenza fallita.")
+
+    end_time = time.time()
+    print(f"\n--- Script Terminato --- (Tempo totale: {end_time - start_time:.2f} secondi)")
