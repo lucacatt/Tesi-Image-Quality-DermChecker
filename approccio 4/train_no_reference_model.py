@@ -6,20 +6,31 @@ import pandas as pd
 import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
+import sys
+
+# --- Configurazione GPU ---
+# Controlla e abilita l'uso della GPU, se disponibile
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+if physical_devices:
+    # Abilita la crescita dinamica della memoria
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+    print(f"💻 Utilizzo della GPU: {physical_devices[0]}")
+else:
+    print("⚠ GPU non trovata, il modello utilizzerà la CPU.")
 
 # --- CONFIG ---
 IMG_SIZE = (300, 300)
-BATCH_SIZE = 8
+BATCH_SIZE = 12
 EPOCHS = 30
-CSV_PATH = "no_reference_dataset.csv"
-MODEL_PATH = "no_reference_efficientnet.keras"
+CSV_PATH = "/content/drive/MyDrive/approccio4/no_reference_dataset.csv"
+MODEL_PATH = "/content/drive/MyDrive/approccio4/no_reference_efficientnet.keras"
 
 # --- Caricamento CSV ---
 df = pd.read_csv(CSV_PATH)
 train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)
 
 def load_img(path):
-    img = cv2.imread(path)
+    img = cv2.imread("/content/drive/MyDrive/approccio4/"+ path)
     img = cv2.resize(img, IMG_SIZE)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     return img.astype("float32") / 255.0
