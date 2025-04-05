@@ -4,3 +4,4 @@ venv_test/
 images/
 degraded/
 sharp/
+test_degraded/
