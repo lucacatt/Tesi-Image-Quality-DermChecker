@@ -3,22 +3,20 @@ import cv2
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from skimage.metrics import structural_similarity as ssim
 
 # Config
-SHARP_DIR = "/content/drive/MyDrive/approccio4/sharp"
-DEGRADED_DIR = "/content/drive/MyDrive/approccio4/degraded"
-MODEL_PATH = "/content/drive/MyDrive/approccio4/siamese_quality_model.keras"
-OUTPUT_CSV = "/content/drive/MyDrive/approccio4/no_reference_dataset.csv"
+SHARP_DIR = "sharp"
+DEGRADED_DIR = "degraded"
+OUTPUT_CSV = "ssim_dataset.csv"
 IMG_SIZE = (384, 384)
 
-# Load modello Siamese
-model = tf.keras.models.load_model(MODEL_PATH, compile=False)
 
 def load_img(path):
     img = cv2.imread(path)
     img = cv2.resize(img, IMG_SIZE)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    return img.astype("float32") / 255.0
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return img
 
 data = []
 
@@ -37,10 +35,7 @@ for filename in os.listdir(DEGRADED_DIR):
         degraded = load_img(degraded_path)
         sharp = load_img(sharp_path)
 
-        # Aggiungi l'immagine degradata al dataset con il punteggio predetto dal modello Siamese
-        degraded_batch = np.expand_dims(degraded, axis=0)
-        sharp_batch = np.expand_dims(sharp, axis=0)
-        score = model.predict([sharp_batch, degraded_batch])[0][0]
+        score = ssim(sharp, degraded)
         data.append({
             "image_path": degraded_path,
             "score": score  # Punteggio per l'immagine degradata

@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
 import sys
+from tensorflow.keras.applications.efficientnet import preprocess_input as efficientnet_preprocess_input
 
 # --- Configurazione GPU ---
 # Controlla e abilita l'uso della GPU, se disponibile
@@ -19,35 +20,54 @@ else:
     print("⚠ GPU non trovata, il modello utilizzerà la CPU.")
 
 # --- Configurazioni principali ---
-IMG_SIZE = (300, 300)  # Imposta la dimensione delle immagini
+IMG_SIZE = (384, 384)  # Imposta la dimensione delle immagini
 BATCH_SIZE = 12  # Dimensione del batch
 EPOCHS = 30  # Numero di epoche
-CSV_PATH = "/content/drive/MyDrive/approccio4/no_reference_dataset.csv"  # Percorso al dataset
-MODEL_PATH = "/content/drive/MyDrive/approccio4/no_reference_efficientnet.keras"  # Percorso per salvare il modello
+CSV_PATH = "dati_csv/ssim_dataset.csv"  # Percorso al dataset
+MODEL_PATH = "modelli_keras/no_reference_efficientnet.keras"  # Percorso per salvare il modello
+PREPROCESS_FUNCTION = efficientnet_preprocess_input
 
 # --- Caricamento CSV ---
 df = pd.read_csv(CSV_PATH)  # Carica il CSV con i dati delle immagini
 train_df, val_df = train_test_split(df, test_size=0.2, random_state=42)  # Suddividi il dataset in addestramento e validazione
 
 # Funzione per caricare e preprocessare le immagini
-def load_img(path):
-    img = cv2.imread("/content/drive/MyDrive/approccio4/"+ path)
-    img = cv2.resize(img, IMG_SIZE)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    return img.astype("float32") / 255.0
+def load_img_base(path):
+    try:
+        img = cv2.imread(path)
+        if img is None:
+            print(f"Attenzione: Impossibile leggere {path}, verrà saltata.")
+            return None
+        img = cv2.resize(img, IMG_SIZE)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # Restituisce l'immagine come float32, ma senza normalizzazione qui
+        return img.astype("float32")
+    except Exception as e:
+        print(f"Errore durante caricamento/resize di {path}: {e}")
+        return None
 
 # Funzione per caricare i dati dal CSV
 def load_data(df):
     images = []
     scores = []
+    valid_indices = [] # Tiene traccia degli indici validi
 
-    for _, row in df.iterrows():
-        img = load_img(row["image_path"])  # Carica l'immagine
-        score = row["score"]  # Punteggio di sharpness
-        images.append(img)
-        scores.append(score)
+    for index, row in df.iterrows():
+        img = load_img_base(row["image_path"])
+        if img is not None:
+            images.append(img)
+            scores.append(row["score"])
+            valid_indices.append(index) # Salva l'indice originale
 
-    return np.array(images), np.array(scores)
+    if not images: # Se nessuna immagine è stata caricata con successo
+        return np.array([]), np.array([]), []
+
+    # Applica la funzione di preprocessing specifica del modello DOPO aver caricato
+    # tutte le immagini del batch (o del set in questo caso)
+    images_np = np.array(images)
+    images_preprocessed = PREPROCESS_FUNCTION(images_np)
+
+    return images_preprocessed, np.array(scores), valid_indices
 
 X_train, y_train = load_data(train_df)  # Carica i dati di addestramento
 X_val, y_val = load_data(val_df)  # Carica i dati di validazione
