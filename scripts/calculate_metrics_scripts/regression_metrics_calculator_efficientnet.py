@@ -8,18 +8,17 @@ from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import csv # Lo useremo per salvare le metriche
 
 # --- Configurazione Utente ---
-IMG_SIZE = (384, 384) # Dimensioni attese dal modello
-MODEL_PATH = "modelli_keras/no_reference_efficientnet.keras"  # Percorso del modello salvato
-TEST_DIR = "test_degraded"  # Cartella con le immagini di test (X_test)
-CSV_TRUE_VALUES_PATH = "dati_csv/true_scores.csv" # Percorso del CSV con i valori veri (y_test)
-METRICS_OUTPUT_PATH = "dati_csv/efficientnet_regression_metrics.csv" # File dove salvare le metriche
+IMG_SIZE = (384, 384) 
+MODEL_PATH = "modelli_keras/no_reference_efficientnet.keras" 
+TEST_DIR = "test_degraded" 
+CSV_TRUE_VALUES_PATH = "dati_csv/true_scores.csv" 
+METRICS_OUTPUT_PATH = "dati_csv/efficientnet_regression_metrics.csv" 
 
-# Nomi delle colonne nel tuo file CSV (MODIFICA SE NECESSARIO)
-CSV_IMAGE_PATH_COL = 'image_path'  # Nome colonna con il percorso/nome file immagine
-CSV_TRUE_VALUE_COL = 'ssim_score'  # Nome colonna con il valore numerico vero
+CSV_IMAGE_PATH_COL = 'image_path'  
+CSV_TRUE_VALUE_COL = 'ssim_score' 
 
-VALID_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff') # Estensioni file immagine valide
-# --- Fine Configurazione Utente ---
+VALID_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff') 
+
 
 
 # --- Funzioni Ausiliarie ---
@@ -31,7 +30,7 @@ def load_and_preprocess_image(path, img_size):
             print(f"Attenzione: Impossibile leggere l'immagine {os.path.basename(path)}. Saltata.")
             return None
         img = cv2.resize(img, img_size)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # Assumi che il modello sia addestrato su RGB
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = img.astype("float32") / 255.0
         return img
     except Exception as e:

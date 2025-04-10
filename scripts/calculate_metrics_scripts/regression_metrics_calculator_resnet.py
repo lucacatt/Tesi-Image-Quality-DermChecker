@@ -9,26 +9,20 @@ import pandas as pd
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import csv
 
-# --- Configurazione Utente ---
-# !!! MODIFICA QUESTE RIGHE PER RESNET50V2 !!!
-MODEL_NAME = "ResNet50V2" # Nome per identificare l'output
-MODEL_PATH = "modelli_keras/no_reference_resnet50v2.keras"  # <-- PERCORSO DEL MODELLO RESNET50V2 SALVATO
-METRICS_OUTPUT_PATH = "dati_csv/resnet50v2_regression_metrics.csv" # <-- NUOVO FILE PER LE METRICHE DI RESNET50V2
+MODEL_NAME = "ResNet50V2"
+MODEL_PATH = "modelli_keras/no_reference_resnet50v2.keras"  
+METRICS_OUTPUT_PATH = "dati_csv/resnet50v2_regression_metrics.csv" 
 
-# --- Parametri che DEVONO corrispondere all'addestramento di ResNet50V2 ---
-IMG_SIZE = (384, 384) # Usa la stessa dimensione usata per addestrare ResNet50V2
+IMG_SIZE = (384, 384) 
 
-# --- Dati di Test (DEVONO ESSERE GLI STESSI usati per EfficientNet/MobileNet) ---
 TEST_DIR = "test_degraded"
-# Assicurati che questo CSV contenga gli score veri (es. SSIM)
-CSV_TRUE_VALUES_PATH = "dati_csv/true_scores.csv" # O il nome corretto del tuo file CSV
+CSV_TRUE_VALUES_PATH = "dati_csv/true_scores.csv"
 
-# Nomi delle colonne nel tuo file CSV (verifica che siano corretti)
 CSV_IMAGE_PATH_COL = 'image_path'
-CSV_TRUE_VALUE_COL = 'ssim_score' # O 'score' se la colonna si chiama diversamente
+CSV_TRUE_VALUE_COL = 'ssim_score' 
 
 VALID_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.bmp', '.tif', '.tiff')
-# --- Fine Configurazione Utente ---
+
 
 
 # --- Funzione Ausiliaria (MODIFICATA PER RESNETV2 PREPROCESSING) ---
