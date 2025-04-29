@@ -1,0 +1,41 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {chapter}{\numberline {1}Capitolo 1}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduzione}{1}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Capitolo 2}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Algoritmi Tradizionali per la Valutazione del Degrado}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Varianza Laplaciana}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Structural Similarity Index Measure (SSIM)}{4}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Reti Neurali e Apprendimento Profondo}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Fondamenti delle Reti Neurali Artificiali}{5}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Deep Learning}{5}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Reti Neurali Convoluzionali (CNN)}{6}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Processo di Addestramento}{6}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Transfer Learning}{7}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}Linguaggi e Librerie Software}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Preparazione del Dataset}{9}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Capitolo 3}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Architettura del Modello di Regressione}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Preprocessing dell'Input}{11}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Backbone Convoluzionale Pre-addestrato}{12}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Regression Head Personalizzata}{13}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Pipeline di Addestramento}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Caricamento e Suddivisione del Dataset}{14}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Pre-elaborazione delle Immagini e Batching}{15}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Configurazione e Addestramento del Modello}{15}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Salvataggio del Modello Addestrato}{16}{subsection.3.2.4}%
+\contentsline {chapter}{\numberline {4}Capitolo 4}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduzione agli Esperimenti}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Metrica di Valutazione}{18}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Dataset e Tecniche di Degradazione}{19}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Risultati dei Modelli}{20}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Analisi Qualitativa delle Predizioni}{21}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Motion Blur}{22}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Pixelation}{22}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Gaussian Blur}{23}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Aberrazione Cromatica}{24}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.5.5}Rumore Additivo}{25}{subsection.4.5.5}%
+\contentsline {section}{\numberline {4.6}Conclusioni}{25}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Capitolo 5}{27}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Appendici}{29}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Section}{29}{section.6.1}%

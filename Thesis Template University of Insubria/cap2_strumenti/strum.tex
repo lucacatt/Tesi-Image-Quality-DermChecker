@@ -1,0 +1,126 @@
+%%%%%%%%%% CAPITOLO DI TESI %%%%%%%%%%
+%
+% Capitolo "2" Capitolo 2
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Capitolo 2}
+\label{chap:strumenti}
+\section{Algoritmi Tradizionali per la Valutazione del Degrado}
+
+La fase iniziale di questo lavoro di tesi ha previsto l'esplorazione di alcuni metodi tradizionali per la valutazione della qualità e del degrado delle immagini. Sebbene il progetto si sia successivamente concentrato sull'applicazione di tecniche di apprendimento automatico, la comprensione dei limiti e delle potenzialità degli approcci convenzionali è stata fondamentale per giustificare il passaggio a metodologie più avanzate. Tra gli algoritmi analizzati, particolare attenzione è stata posta alla Varianza Laplaciana e alla metrica SSIM, quest'ultima poi utilizzata come riferimento per il compito di regressione svolto dalla rete neurale.
+
+\subsection{Varianza Laplaciana}
+
+La Varianza Laplaciana è una metrica \textit{no-reference} comunemente impiegata per stimare il grado di nitidezza o sfocatura presente in un'immagine. L'assunto alla base di questo metodo è che le aree a fuoco di un'immagine contengono frequenze spaziali più elevate (bordi nitidi, dettagli fini) rispetto alle aree sfocate. L'operatore Laplaciano è un operatore differenziale discreto che evidenzia i cambiamenti rapidi di intensità, tipici dei bordi. Applicando il Laplaciano a un'immagine, l'output risulterà avere valori di intensità maggiori in corrispondenza dei bordi e dei dettagli.
+
+La Varianza Laplaciana viene calcolata applicando un filtro Laplaciano all'immagine e successivamente calcolando la varianza dei valori dei pixel risultanti. Un valore elevato della varianza indica una maggiore presenza di bordi netti e dettagli, suggerendo un'immagine a fuoco e con basso degrado da sfocatura. Al contrario, un valore basso è indice di un'immagine sfocata. Nonostante la sua semplicità e rapidità di calcolo, la Varianza Laplaciana si è rivelata limitata nel fornire una stima complessiva del degrado, poiché è principalmente sensibile alla sfocatura e meno efficace nel quantificare altri tipi di distorsione (rumore, artefatti di compressione, ecc.) o nel discriminare finemente tra diversi livelli di degrado complesso o combinato.
+
+\subsection{Structural Similarity Index Measure (SSIM)}
+
+Il Structural Similarity Index Measure (SSIM) è una metrica molto diffusa per valutare la similitudine tra due immagini, ed è spesso utilizzata come indicatore della qualità percepita di un'immagine degradata rispetto a un'immagine di riferimento non degradata (è quindi una metrica \textit{full-reference}). A differenza di metriche più semplici come il Mean Squared Error (MSE) o il Peak Signal-to-Noise Ratio (PSNR), che confrontano le differenze assolute o quadratiche tra i singoli pixel, l'SSIM cerca di modellare il modo in cui il sistema visivo umano percepisce le distorsioni, concentrandosi sulla variazione di tre componenti chiave: luminanza, contrasto e struttura.
+
+Il valore di SSIM è tipicamente compreso tra 0 e 1, dove un valore pari a 1 indica che le due immagini sono identiche (perfetta similitudine strutturale e qualità) e valori inferiori indicano un grado crescente di differenza e degrado percepito. La formula dell'SSIM combina la valutazione di queste tre componenti attraverso un calcolo che viene applicato localmente in piccole finestre scorrevoli sull'immagine e i risultati vengono poi mediati sull'intera immagine per ottenere uno score globale.
+
+Nel contesto di questo lavoro di tesi, l'SSIM ha rivestito un ruolo cruciale, fungendo da ponte tra un approccio basato su riferimento e la costruzione di un modello \textbf{no-reference}. Sebbene la metrica SSIM in sé richieda l'immagine originale non degradata come riferimento per il suo calcolo, i valori di SSIM ottenuti confrontando ciascuna immagine degradata con la sua controparte originale non degradata sono stati utilizzati come \textbf{valori target} (o "ground truth") per l'addestramento del modello a rete neurale. In altre parole, l'SSIM è stato impiegato per \textit{etichettare} il dataset di immagini degradate con uno score oggettivo di qualità/degrado. L'obiettivo del modello a rete neurale, una volta addestrato, è quello di prendere in input \textit{solo} l'immagine degradata (modalità no-reference) e predire uno score continuo (tra 0 e 1) che sia il più possibile vicino al valore SSIM oggettivo associato a quell'immagine. Questa strategia permette di addestrare un modello no-reference sfruttando l'affidabilità dell'SSIM come metrica di qualità percepita, pur liberando il modello finale dalla necessità di avere l'immagine di riferimento durante l'inferenza. Il dataset di addestramento è stato inoltre arricchito includendo le immagini originali non degradate, associate a un valore target SSIM pari a 1.0, per fornire al modello esempi di "qualità perfetta".
+
+\section{Reti Neurali e Apprendimento Profondo}
+
+Date le limitazioni riscontrate negli approcci tradizionali per la valutazione complessiva e robusta del degrado delle immagini, questo lavoro di tesi si è orientato verso l'utilizzo delle metodologie basate sull'apprendimento automatico e, in particolare, sull'apprendimento profondo (Deep Learning). Questi approcci hanno dimostrato una capacità senza precedenti nell'analizzare dati complessi come le immagini, apprendendo automaticamente gerarchie di caratteristiche rilevanti direttamente dai dati grezzi.
+
+\subsection{Fondamenti delle Reti Neurali Artificiali}
+
+Una Rete Neurale Artificiale (ANN) è un modello computazionale ispirato alla struttura e al funzionamento del cervello biologico. Le ANN sono composte da un insieme interconnesso di unità di elaborazione, chiamate neuroni artificiali, organizzati in strati (layers). Generalmente, una rete neurale si articola in:
+\begin{itemize}
+    \item Uno strato di input: riceve i dati grezzi (nel nostro caso, i valori dei pixel dell'immagine).
+    \item Uno o più strati nascosti: dove avviene la maggior parte dell'elaborazione. Nelle reti neurali profonde, questi strati sono numerosi.
+    \item Uno strato di output: produce il risultato della rete (nel nostro caso, lo score di degrado predetto).
+\end{itemize}
+
+Ogni connessione tra neuroni ha un peso (weight) associato e ogni neurone ha un bias. L'output di un neurone è calcolato applicando una funzione di attivazione non lineare alla somma pesata degli input più il bias. È la presenza di funzioni di attivazione non lineari negli strati nascosti che permette alle reti neurali di apprendere relazioni complesse e non lineari nei dati.
+
+\subsection{Deep Learning}
+
+Il Deep Learning è un sottoinsieme dell'apprendimento automatico che si basa su reti neurali con un numero elevato di strati nascosti (da cui il termine "profondo"). La profondità dell'architettura consente alla rete di apprendere rappresentazioni dei dati a livelli multipli di astrazione: gli strati iniziali possono apprendere caratteristiche semplici come bordi o angoli, mentre gli strati più profondi possono combinare queste caratteristiche elementari per riconoscere pattern più complessi e semanticamente significativi. Questo apprendimento gerarchico automatico elimina la necessità di definire manualmente caratteristiche specifiche per un dato compito, come avviene negli approcci tradizionali.
+
+\subsection{Reti Neurali Convoluzionali (CNN)}
+
+Le Reti Neurali Convoluzionali (CNN) rappresentano l'architettura di riferimento per l'analisi di dati strutturati come immagini. Le CNN sfruttano la struttura spaziale delle immagini introducendo specifici tipi di strati:
+\begin{itemize}
+    \item \textbf{Strati Convoluzionali:} Questi strati sono il cuore delle CNN. Applicano dei filtri (kernel) che scorrono sull'immagine di input (o sulle feature map generate dagli strati precedenti) per rilevare pattern locali (come bordi, texture, forme). L'operazione di convoluzione mantiene la relazione spaziale tra i pixel e riduce il numero di parametri grazie alla condivisione dei pesi (lo stesso filtro viene applicato su tutta l'immagine). L'output di uno strato convoluzionale è un insieme di feature map che rappresentano l'attivazione dei vari filtri sull'input.
+    \item \textbf{Funzioni di Attivazione:} Dopo ogni operazione di convoluzione, una funzione di attivazione non lineare (comunemente la Rectified Linear Unit, ReLU) viene applicata elemento per elemento per introdurre non linearità nel modello.
+    \item \textbf{Strati di Pooling:} Questi strati (es. MaxPooling, AveragePooling) riducono la dimensionalità spaziale delle feature map, mantenendo le informazioni più rilevanti. Questo riduce il numero di parametri e di calcoli computazionali, oltre a conferire alla rete una certa invarianza rispetto a piccole traslazioni nell'immagine.
+    \item \textbf{Strati Fully Connected (Densamente Connessi):} Alla fine della rete, dopo diversi strati convoluzionali e di pooling, uno o più strati fully connected prendono le feature estratte e appiattite e le mappano sullo spazio di output desiderato (nel nostro caso, uno singolo valore per la regressione dello score di degrado).
+\end{itemize}
+
+L'architettura di una CNN tipica per compiti di regressione su immagini si compone quindi di una successione di strati convoluzionali e di pooling, seguita da uno o più strati fully connected che culminano nello strato di output.
+
+\subsection{Processo di Addestramento}
+
+L'addestramento di una rete neurale profonda è un processo iterativo che mira a ottimizzare i pesi e i bias della rete in modo che questa possa mappare accuratamente gli input (immagini degradate) agli output desiderati (valori SSIM). Le fasi principali includono:
+\begin{itemize}
+    \item \textbf{Forward Pass:} L'immagine di input viene propagata attraverso gli strati della rete per generare una predizione.
+    \item \textbf{Funzione di Loss:} Viene calcolato un valore di "errore" o "loss" confrontando la predizione della rete con il valore target effettivo (SSIM). Per compiti di regressione come questo, funzioni di loss comuni sono il Mean Squared Error (MSE) o il Mean Absolute Error (MAE). La funzione di loss quantifica quanto la predizione della rete si discosta dalla verità.
+    \item \textbf{Backward Pass e Backpropagation:} L'errore viene retropropagato attraverso la rete, partendo dallo strato di output fino agli strati iniziali. L'algoritmo di Backpropagation calcola i gradienti della funzione di loss rispetto a ciascun peso e bias della rete.
+    \item \textbf{Ottimizzazione:} Un algoritmo di ottimizzazione (es. Adam, Stochastic Gradient Descent - SGD) utilizza i gradienti calcolati per aggiornare i pesi e i bias della rete, con l'obiettivo di minimizzare la funzione di loss. Questo processo viene ripetuto su grandi quantità di dati (dataset di addestramento) per molte epoche.
+\end{itemize}
+
+\subsection{Transfer Learning}
+
+Dato che l'addestramento di reti neurali profonde da zero richiede dataset molto ampi e risorse computazionali significative, una tecnica efficace è il Transfer Learning. Questa tecnica consiste nell'utilizzare un modello di rete neurale che è già stato addestrato su un compito simile e su un dataset molto vasto (come ImageNet, che contiene milioni di immagini e migliaia di categorie) e riutilizzare i pesi appresi come punto di partenza per un nuovo compito su un dataset diverso ma correlato.
+
+Nel contesto di questo progetto, sono stati impiegati modelli pre-addestrati su ImageNet (come ResNet50V2, MobileNetV2, EfficientNetB3). Le parti convoluzionali di questi modelli hanno già imparato a estrarre feature visive generiche (bordi, texture, forme) che sono utili per una vasta gamma di compiti di visione artificiale, inclusa la valutazione del degrado. Invece di addestrare la rete da zero, sono stati utilizzati i pesi pre-addestrati nelle sezioni convoluzionali, e sono stati ri-addestrati (o "fine-tuned") solo gli strati finali (fully connected) sulla base del dataset specifico di immagini degradate e dei relativi valori SSIM. Questo approccio consente di ottenere buone prestazioni anche con dataset di dimensioni più ridotte e riduce drasticamente i tempi e le risorse necessarie per l'addestramento.
+
+\section{Linguaggi e Librerie Software}
+
+Lo sviluppo del presente progetto di tesi ha richiesto l'utilizzo di un insieme di strumenti software specifici, comprendenti linguaggi di programmazione, framework per l'apprendimento automatico e librerie dedicate all'elaborazione di immagini, alla manipolazione dati e alla valutazione delle prestazioni. La scelta di questi strumenti è stata guidata dalla loro efficacia, flessibilità e ampia adozione nella comunità scientifica e industriale, in particolare nel campo della computer vision e del deep learning.
+
+Il linguaggio di programmazione principale impiegato per l'implementazione degli algoritmi e dei modelli è stato \textbf{Python}. Grazie alla sua sintassi chiara e alla vasta disponibilità di librerie specializzate, Python rappresenta uno standard de facto per lo sviluppo di applicazioni di apprendimento automatico e analisi dati.
+
+Per la costruzione, l'addestramento e la valutazione dei modelli a rete neurale, è stato utilizzato il framework \textbf{TensorFlow}, con particolare riferimento alla sua API di alto livello \textbf{Keras}. TensorFlow è una piattaforma open-source end-to-end per il machine learning, mentre Keras fornisce un'interfaccia utente per le reti neurali intuitiva e modulare, che ha semplificato notevolmente la definizione delle architetture dei modelli (come i modelli pre-addestrati ResNet50V2, MobileNetV2, EfficientNetB3 menzionati nel Capitolo \ref{chap:esperimenti}) e la gestione del pipeline di addestramento.
+
+L'elaborazione e la manipolazione delle immagini sono state gestite attraverso diverse librerie specializzate:
+\begin{itemize}
+    \item \textbf{OpenCV (cv2):} Utilizzata per operazioni fondamentali di visione artificiale, quali il caricamento delle immagini (`cv2.imread`), il ridimensionamento (`cv2.resize`) e la conversione tra diversi spazi colore (`cv2.cvtColor`), come mostrato nello script per la preparazione del dataset.
+    \item \textbf{Scikit-learn (sklearn):} Una libreria completa per l'elaborazione di immagini e l'analisi di metriche, È stata utilizzata per calcolare la metrica SSIM, (`skimage.metrics.structural\_similarity`), che ha costituito la base per l'etichettatira del dataser di addestramento e per la definizione dei valori target per la regressione.
+\end{itemize}
+
+La gestione e l'elaborazione dei dati, inclusa la preparazione del dataset e la valutazione delle prestazioni del modello, hanno beneficiato dell'utilizzo delle seguenti librerie:
+\begin{itemize}
+    \item \textbf{NumPy:} La libreria fondamentale per il calcolo numerico in Python, essenziale per la manipolazione efficiente di array e matrici, formato in cui vengono rappresentate le immagini e i dati numerici elaborati dal modello.
+    \item \textbf{Pandas:} Una libreria potente e flessibile per l'analisi e la manipolazione di dati strutturati. È stata impiegata per creare e gestire i DataFrame contenenti le informazioni sulle immagini e i loro score di qualità, facilitando la preparazione, il caricamento e la suddivisione del dataset (\texttt{pd.DataFrame}, \texttt{to\_csv}).
+    \item \textbf{Scikit-learn (sklearn.metrics):} Specificamente il modulo \texttt{metrics} di scikit-learn è stato impiegato per calcolare le metriche di valutazione della regressione, quali il Mean Absolute Error (MAE), il Mean Squared Error (MSE) e il coefficiente R\textsuperscript{2}, essenziali per quantificare le prestazioni del modello sugli insiemi di validazione e test (come dettagliato nel Capitolo \ref{chap:esperimenti}).
+\end{itemize}
+
+Infine, per la visualizzazione dei risultati, incluse le metriche di performance dei modelli e le distribuzioni dei dati (come mostrato nel Capitolo \ref{chap:esperimenti}), sono state utilizzate le librerie \textbf{Matplotlib} e \textbf{Seaborn}, strumenti standard per la creazione di grafici statici e per la visualizzazione statistica dei dati in Python.
+
+L'integrazione di questi strumenti ha permesso di coprire l'intero ciclo di vita del progetto, dalla preparazione dei dati all'implementazione e valutazione dei modelli di deep learning.
+
+
+\section{Preparazione del Dataset}
+
+L'addestramento supervisionato di un modello a rete neurale richiede un dataset consistente e correttamente etichettato, dove a ogni immagine di input è associato il corrispondente valore target desiderato. Nel contesto di questo progetto, il valore target è lo score di qualità/degrado, derivato dalla metrica SSIM. La preparazione del dataset ha rappresentato una fase cruciale del lavoro, volta a creare un corpus di immagini degradate e non degradate, ciascuna associata a uno score numerico rappresentativo del suo livello di qualità percepita.
+
+Il dataset di base per l'addestramento e la validazione dei modelli è stato costruito partendo da un insieme di immagini originali non degradate, provenienti sia da un dataset pubblico (\url{https://data.mendeley.com/datasets/zr7vgbcyr2/1}) sia da un dataset privato fornito dal relatore. Per la fase di addestramento e validazione sono state utilizzate \textbf{2262 immagini originali} da questo pool.
+
+Per simulare in modo realistico le varie forme di degrado che le immagini possono subire in contesti reali (come quello dermatologico), è stato sviluppato uno script personalizzato che applica trasformazioni casuali alle immagini originali. A ogni immagine originale selezionata per il training/validazione è stata applicata un numero casuale di degradazioni, variabile \textbf{tra 1 e 5}. Le trasformazioni applicate sono state scelte casualmente da una lista di \textbf{dieci differenti tipologie di degrado}:
+\begin{itemize}
+    \item \textbf{Motion Blur:} Simula la sfocatura dovuta al movimento.
+    \item \textbf{Gaussian Blur:} Introduce una sfocatura più uniforme, tipica di problemi di messa a fuoco.
+    \item \textbf{Variazione di luminosità:} Altera l'illuminazione dell'immagine.
+    \item \textbf{Compressione JPEG:} Introduce artefatti di compressione con perdita di qualità.
+    \item \textbf{Variazione del contrasto:} Modifica la gamma dinamica dell'immagine.
+    \item \textbf{Alterazione della saturazione (colorfulness):} Modifica l'intensità dei colori.
+    \item \textbf{Rumore additivo:} Aggiunge disturbi casuali (gaussiano, sale e pepe, complesso).
+    \item \textbf{Aberrazione cromatica:} Introduce distorsioni cromatiche tipiche di sistemi ottici imperfetti.
+    \item \textbf{Pixelazione:} Riduce la risoluzione effettiva dell'immagine, rendendo visibili i singoli pixel.
+    \item \textbf{Color Cast:} Introduce una dominante di colore nell'immagine.
+\end{itemize}
+I parametri specifici per ciascuna trasformazione (es. entità della sfocatura, livello di rumore, fattore di compressione) sono stati anch'essi randomizzati per garantire un'ampia variabilità nel dataset risultante. Questo processo ha generato una corrispondente immagine degradata per ciascuna delle 2262 immagini originali. Le librerie \texttt{cv2}, \texttt{tensorflow} (per le operazioni di immagine), \texttt{numpy} e \texttt{random} sono state fondamentali per implementare queste trasformazioni.
+
+Una volta create le immagini degradate, è stata necessaria l'etichettatura con uno score numerico di qualità. Come discusso nel Capitolo \ref{chap:strumenti}, la metrica \textbf{SSIM} è stata scelta per generare questo score. Per ogni immagine degradata creata, è stato calcolato il valore di SSIM confrontandola con la sua immagine originale non degradata corrispondente. Questo valore SSIM (compreso tra 0 e 1) è stato associato all'immagine degradata come suo valore target di qualità.
+
+Per fornire al modello esempi di immagini di qualità perfetta, le 2262 immagini originali non degradate sono state anch'esse incluse nel dataset finale, associando loro un valore target di SSIM pari a \textbf{1.0}.
+
+Tutte queste informazioni (il percorso del file immagine e il suo score SSIM associato) sono state raccolte e organizzate in un file strutturato in formato \textbf{CSV} (\texttt{ssim\_dataset.csv}). Questo file contiene quindi un elenco di immagini (sia le 2262 degradate che le 2262 originali) e il loro rispettivo score di qualità calcolato tramite SSIM o assegnato come 1.0. In totale, il dataset utilizzato per l'addestramento e la validazione del modello è composto da \textbf{4524 voci}. Le librerie \texttt{skimage.metrics} e \texttt{pandas} sono state utilizzate per il calcolo dell'SSIM e la gestione del file CSV, rispettivamente.
+
+Questo dataset etichettato ha costituito la base per l'addestramento supervisionato del modello a rete neurale, permettendo alla rete di apprendere a mappare le caratteristiche visive a diversi livelli di qualità. La specifica suddivisione di questo dataset in set di addestramento e validazione, così come la creazione di un set di test indipendente per la valutazione delle prestazioni, sono dettagliate nel Capitolo \ref{chap:esperimenti}.

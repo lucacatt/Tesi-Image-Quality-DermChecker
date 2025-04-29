@@ -1,0 +1,1038 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.28)  29 APR 2025 11:39
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"l:/Tesi Image Quality DermChecker/Tesi-Image-Quality-DermChecker/Thesis Template University of Insubria/tesi.tex"
+(l:/Tesi Image Quality DermChecker/Tesi-Image-Quality-DermChecker/Thesis Template University of Insubria/tesi.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-03-26>
+(l:/texlive/2025/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2024/06/29 v1.4n Standard LaTeX document class
+(l:/texlive/2025/texmf-dist/tex/latex/base/bk11.clo
+File: bk11.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count197
+\c@chapter=\count198
+\c@section=\count199
+\c@subsection=\count266
+\c@subsubsection=\count267
+\c@paragraph=\count268
+\c@subparagraph=\count269
+\c@figure=\count270
+\c@table=\count271
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen146
+) (l:/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+) (l:/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+ (l:/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count272
+\Gm@cntv=\count273
+\c@Gm@tempcnt=\count274
+\Gm@bindingoffset=\dimen147
+\Gm@wd@mp=\dimen148
+\Gm@odd@mp=\dimen149
+\Gm@even@mp=\dimen150
+\Gm@layoutwidth=\dimen151
+\Gm@layoutheight=\dimen152
+\Gm@layouthoffset=\dimen153
+\Gm@layoutvoffset=\dimen154
+\Gm@dimlist=\toks18
+) (l:/texlive/2025/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
+) (l:/texlive/2025/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2025/04/14 v25.7 The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX
+\babel@savecnt=\count275
+\U@D=\dimen155
+\l@unhyphenated=\language90
+ (l:/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count276
+ (l:/texlive/2025/texmf-dist/tex/generic/babel-italian/italian.ldf
+Language: italian 2024/10/10 v.1.5.01 Italian support for the babel system
+\it@lettering=\count277
+\it@doublequoteactive=\count278
+\it@ISOcompliance=\count279
+)) (l:/texlive/2025/texmf-dist/tex/generic/babel/locale/it/babel-italian.tex
+Package babel Info: Importing font and identification data for italian
+(babel)             from babel-it.ini. Reported on input line 11.
+) (l:/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count280
+) (l:/texlive/2025/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2024/04/24 v2.1b Standard LaTeX package
+) (l:/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2024/06/23 v1.3e Standard LaTeX Color (DPC)
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+) (l:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (l:/texlive/2025/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+) (l:/texlive/2025/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks19
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+) (l:/texlive/2025/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count281
+\float@exts=\toks20
+\float@box=\box53
+\@float@everytoks=\toks21
+\@floatcapt=\box54
+) (l:/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen156
+\lightrulewidth=\dimen157
+\cmidrulewidth=\dimen158
+\belowrulesep=\dimen159
+\belowbottomsep=\dimen160
+\aboverulesep=\dimen161
+\abovetopsep=\dimen162
+\cmidrulesep=\dimen163
+\cmidrulekern=\dimen164
+\defaultaddspace=\dimen165
+\@cmidla=\count282
+\@cmidlb=\count283
+\@aboverulesep=\dimen166
+\@belowrulesep=\dimen167
+\@thisruleclass=\count284
+\@lastruleclass=\count285
+\@thisrulewidth=\dimen168
+) (l:/texlive/2025/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2024-10-27 v4.22 Multi-page Table package (DPC)
+\LTleft=\skip51
+\LTright=\skip52
+\LTpre=\skip53
+\LTpost=\skip54
+\LTchunksize=\count286
+\LTcapwidth=\dimen169
+\LT@head=\box55
+\LT@firsthead=\box56
+\LT@foot=\box57
+\LT@lastfoot=\box58
+\LT@gbox=\box59
+\LT@cols=\count287
+\LT@rows=\count288
+\c@LT@tables=\count289
+\c@LT@chunks=\count290
+\LT@p@ftn=\toks22
+) (l:/texlive/2025/texmf-dist/tex/latex/base/makeidx.sty
+Package: makeidx 2021/10/04 v1.0m Standard LaTeX package
+) (l:/texlive/2025/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
+\f@nch@headwidth=\skip55
+\f@nch@offset@elh=\skip56
+\f@nch@offset@erh=\skip57
+\f@nch@offset@olh=\skip58
+\f@nch@offset@orh=\skip59
+\f@nch@offset@elf=\skip60
+\f@nch@offset@erf=\skip61
+\f@nch@offset@olf=\skip62
+\f@nch@offset@orf=\skip63
+\f@nch@height=\skip64
+\f@nch@footalignment=\skip65
+\f@nch@widthL=\skip66
+\f@nch@widthC=\skip67
+\f@nch@widthR=\skip68
+\@temptokenb=\toks23
+) (l:/texlive/2025/texmf-dist/tex/latex/quotchap/quotchap.sty
+Package: quotchap 2020/11/13 v1.3 Decorative Chapter Headings with Quotes
+\@quotebox=\box60
+) (l:/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
+\multirow@colwidth=\skip69
+\multirow@cntb=\count291
+\multirow@dima=\skip70
+\bigstrutjot=\dimen170
+) (l:/texlive/2025/texmf-dist/tex/latex/version/version.sty
+Package: version 2009/09/15  v 2.0
+Package version Info: Excluding comment environments declared on input line 115.
+) (l:/texlive/2025/texmf-dist/tex/latex/abstract/abstract.sty
+Package: abstract 2009/06/08 v1.2a configurable abstracts
+\abstitleskip=\skip71
+\absleftindent=\skip72
+\absrightindent=\skip73
+\absparindent=\skip74
+\absparsep=\skip75
+
+
+l:/texlive/2025/texmf-dist/tex/latex/abstract/abstract.sty:104: LaTeX Error: Environment abstract undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.104   \renewenvironment{abstract}
+                                   {%
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+) (l:/texlive/2025/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count292
+\lst@gtempboxa=\box61
+\lst@token=\toks24
+\lst@length=\count293
+\lst@currlwidth=\dimen171
+\lst@column=\count294
+\lst@pos=\count295
+\lst@lostspace=\dimen172
+\lst@width=\dimen173
+\lst@newlines=\count296
+\lst@lineno=\count297
+\lst@maxwidth=\dimen174
+ (l:/texlive/2025/texmf-dist/tex/latex/listings/lstpatch.sty
+File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
+) (l:/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
+\c@lstnumber=\count298
+\lst@skipnumbers=\count299
+\lst@framebox=\box62
+) (l:/texlive/2025/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2024/09/23 1.10c listings configuration
+))
+Package: listings 2024/09/23 1.10c (Carsten Heinz)
+ (l:/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+LaTeX Info: Redefining \color on input line 762.
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (l:/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+) (l:/texlive/2025/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2025/01/04 v2.17 Sectioning titles
+\ttl@box=\box63
+\beforetitleunit=\skip76
+\aftertitleunit=\skip77
+\ttl@plus=\dimen175
+\ttl@minus=\dimen176
+\ttl@toksa=\toks25
+\titlewidth=\dimen177
+\titlewidthlast=\dimen178
+\titlewidthfirst=\dimen179
+) (l:/texlive/2025/texmf-dist/tex/latex/floatflt/floatflt.sty
+Package: floatflt 1997/07/16 v. 1.31
+\c@OptionTest=\count300
+\figbox=\box64
+\tabbox=\box65
+\pagebox=\box66
+\ffigcount=\count301
+\ftabcount=\count302
+\fftest=\count303
+\hangcount=\count304
+\nosuccesstryfig=\count305
+\nosuccesstrytab=\count306
+\figgutter=\dimen180
+\tabgutter=\dimen181
+\htdone=\dimen182
+\pageht=\dimen183
+\startpageht=\dimen184
+\tabbredd=\dimen185
+\floatfltwidth=\dimen186
+\fltitemwidth=\dimen187
+\outputpretest=\toks26
+) (l:/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+ (l:/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (l:/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+)
+\Gin@req@height=\dimen188
+\Gin@req@width=\dimen189
+) (l:/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
+ (l:/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+) (l:/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (l:/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+ (l:/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+) (l:/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (l:/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)) (l:/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (l:/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
+ (l:/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (l:/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (l:/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count307
+) (l:/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO)
+)
+\@linkdim=\dimen190
+\Hy@linkcounter=\count308
+\Hy@pagecounter=\count309
+ (l:/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (l:/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count310
+ (l:/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4157.
+Package hyperref Info: Link nesting OFF on input line 4162.
+Package hyperref Info: Hyper index ON on input line 4165.
+Package hyperref Info: Plain pages OFF on input line 4172.
+Package hyperref Info: Backreferencing OFF on input line 4177.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4424.
+\c@Hy@tempcnt=\count311
+LaTeX Info: Redefining \url on input line 4763.
+\XeTeXLinkMargin=\dimen191
+ (l:/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+ (l:/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count312
+\Field@Width=\dimen192
+\Fld@charsize=\dimen193
+Package hyperref Info: Hyper figures OFF on input line 6042.
+Package hyperref Info: Link nesting OFF on input line 6047.
+Package hyperref Info: Hyper index ON on input line 6050.
+Package hyperref Info: backreferencing OFF on input line 6057.
+Package hyperref Info: Link coloring OFF on input line 6062.
+Package hyperref Info: Link coloring with OCG OFF on input line 6067.
+Package hyperref Info: PDF/A mode OFF on input line 6072.
+ (l:/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count313
+\c@Item=\count314
+\c@Hfootnote=\count315
+)
+Package hyperref Info: Driver: hpdftex.
+ (l:/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2024-11-05 v7.01l Hyperref driver for pdfTeX
+ (l:/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
+with kernel methods
+)
+\Fld@listcount=\count316
+\c@bookmark@seq@number=\count317
+ (l:/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+ (l:/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 285.
+)
+\Hy@SectionHShift=\skip78
+) (l:/texlive/2025/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip79
+\subfigcapskip=\skip80
+\subfigcaptopadj=\dimen194
+\subfigbottomskip=\skip81
+\subfigcapmargin=\dimen195
+\subfiglabelskip=\skip82
+\c@subfigure=\count318
+\c@lofdepth=\count319
+\c@subtable=\count320
+\c@lotdepth=\count321
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(l:/texlive/2025/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip83
+\subfig@bottom=\skip84
+) (l:/texlive/2025/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
+ (l:/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks27
+\c@algorithm=\count322
+) (l:/texlive/2025/texmf-dist/tex/latex/algorithms/algorithmic.sty
+Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+\c@ALC@unique=\count323
+\c@ALC@line=\count324
+\c@ALC@rem=\count325
+\c@ALC@depth=\count326
+\ALC@tlm=\skip85
+\algorithmicindent=\skip86
+) (l:/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks28
+\inpenc@posthook=\toks29
+) (l:/texlive/2025/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2024/07/06 v1.0i Color table columns (DPC)
+ (l:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
+\col@sep=\dimen196
+\ar@mcellbox=\box67
+\extrarowheight=\dimen197
+\NC@list=\toks30
+\extratabsurround=\skip87
+\backup@length=\skip88
+\ar@cellbox=\box68
+)
+\everycr=\toks31
+\minrowclearance=\skip89
+\rownum=\count327
+)
+\@indexfile=\write3
+\openout3 = `tesi.idx'.
+
+
+Writing index file tesi.idx
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 186.
+(l:/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) (l:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2025-03-14 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count328
+) (./tesi.aux)
+\openout1 = `tesi.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 186.
+LaTeX Font Info:    ... okay on input line 186.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: twoside 
+* h-part:(L,W,R)=(71.70166pt, 418.25368pt, 107.55254pt)
+* v-part:(T,H,B)=(101.40665pt, 591.5302pt, 152.11pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=418.25368pt
+* \textheight=591.5302pt
+* \oddsidemargin=-0.56833pt
+* \evensidemargin=35.28255pt
+* \topmargin=-2.73714pt
+* \headheight=12.0pt
+* \headsep=19.8738pt
+* \topskip=11.0pt
+* \footskip=27.46295pt
+* \marginparwidth=106.0pt
+* \marginparsep=7.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Info: Redefining \it@ocap on input line 186.
+LaTeX Info: Redefining \it@ccap on input line 186.
+
+File italian.ldf warning: 
+italian.ldf    With OT1 encoding guillemets are poorly faked
+italian.ldf    Use T1 encoding
+italian.ldf    or specify a font with command \CaporaliFrom
+italian.ldf    See the documentation concerning the babel-italian typesetting
+italian.ldf    on input line 186.
+
+(l:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count329
+\scratchdimen=\dimen198
+\scratchbox=\box69
+\nofMPsegments=\count330
+\nofMParguments=\count331
+\everyMPshowfont=\toks32
+\MPscratchCnt=\count332
+\MPscratchDim=\dimen199
+\MPnumerator=\count333
+\makeMPintoPDFobject=\count334
+\everyMPtoPDFconversion=\toks33
+) (l:/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (l:/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+\c@lstlisting=\count335
+Package hyperref Info: Link coloring OFF on input line 186.
+\@outlinefile=\write4
+\openout4 = `tesi.out'.
+
+ (./copertina/copertina.tex
+<copertina/logounivector.pdf, id=4, 422.47905pt x 402.27107pt>
+File: copertina/logounivector.pdf Graphic file (type pdf)
+<use copertina/logounivector.pdf>
+Package pdftex.def Info: copertina/logounivector.pdf  used on input line 12.
+(pdftex.def)             Requested size: 105.61949pt x 100.56752pt.
+LaTeX Font Info:    Trying to load font information for OT1+phv on input line 17.
+ (l:/texlive/2025/texmf-dist/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
+)
+
+[1
+
+
+{l:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{l:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{l:/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc} <./copertina/logounivector.pdf>])
+
+[2
+
+]
+
+[1]
+
+[2
+
+]
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 208.
+ (l:/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+
+Package xcolor Warning: Incompatible color definition on input line 208.
+
+No file tesi.toc.
+\tf@toc=\write5
+\openout5 = `tesi.toc'.
+
+
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.i}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.209         \listoffigures
+                             [1
+
+]
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.ii}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.209         \listoffigures
+                             [2
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 209.
+
+No file tesi.lof.
+\tf@lof=\write6
+\openout6 = `tesi.lof'.
+
+
+
+[3]
+
+[4
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 210.
+
+No file tesi.lot.
+\tf@lot=\write7
+\openout7 = `tesi.lot'.
+
+
+
+[5]
+
+[6
+
+]
+\openout2 = `cap1_introduzione/intro.aux'.
+
+ (./cap1_introduzione/intro.tex
+Capitolo 1.
+
+Package xcolor Warning: Incompatible color definition on input line 8.
+
+LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 11.
+(l:/texlive/2025/texmf-dist/tex/latex/lm/ot1lmss.fd
+File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.20 \begin{itemize}
+                     [1
+
+
+
+]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 21.
+ (l:/texlive/2025/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+
+LaTeX Warning: Reference `chap:strumenti' on page 2 undefined on input line 21.
+
+
+LaTeX Warning: Reference `chap:soluzione' on page 2 undefined on input line 22.
+
+
+LaTeX Warning: Reference `chap:esperimenti' on page 2 undefined on input line 23.
+
+
+LaTeX Warning: Reference `chap:conclusioni' on page 2 undefined on input line 24.
+
+)
+
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.234         \include{cap1_introduzione/intro}
+                                                [2{l:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+\openout2 = `cap2_strumenti/strum.aux'.
+
+ (./cap2_strumenti/strum.tex
+Capitolo 2.
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+
+
+[3
+
+
+
+
+]
+
+[4]
+
+[5]
+
+[6]
+
+[7]
+
+LaTeX Warning: Reference `chap:esperimenti' on page 8 undefined on input line 79.
+
+LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 90.
+(l:/texlive/2025/texmf-dist/tex/latex/lm/ot1lmtt.fd
+File: ot1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 91.
+ (l:/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 91.
+ (l:/texlive/2025/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 91.
+ (l:/texlive/2025/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 91.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 91.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 91.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 91.
+ (l:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 91.
+ (l:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+
+LaTeX Warning: Reference `chap:esperimenti' on page 8 undefined on input line 91.
+
+
+LaTeX Warning: Reference `chap:esperimenti' on page 8 undefined on input line 94.
+
+
+
+[8{l:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}]
+
+[9]
+
+LaTeX Warning: Reference `chap:strumenti' on page 10 undefined on input line 120.
+
+
+Overfull \hbox (14.09416pt too wide) in paragraph at lines 124--125
+\OT1/lmr/m/n/10.95 so-no sta-te rac-col-te e or-ga-niz-za-te in un fi-le strut-tu-ra-to in for-ma-to \OT1/lmr/bx/n/10.95 CSV \OT1/lmr/m/n/10.95 (\OT1/lmtt/m/n/10.95 ssim[]dataset.csv\OT1/lmr/m/n/10.95 ).
+ []
+
+
+LaTeX Warning: Reference `chap:esperimenti' on page 10 undefined on input line 126.
+
+)
+
+[10]
+\openout2 = `cap3_soluzione/sol.aux'.
+
+ (./cap3_soluzione/sol.tex
+Capitolo 3.
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+
+LaTeX Warning: Reference `chap:strumenti' on page 11 undefined on input line 11.
+
+
+LaTeX Warning: Reference `chap:strumenti' on page 11 undefined on input line 17.
+
+
+
+[11
+
+
+
+
+]
+Overfull \hbox (46.45557pt too wide) in paragraph at lines 21--22
+\OT1/lmr/m/n/10.95 mework Ten-sor-Flo-w/-Ke-ras (ad esem-pio, \OT1/lmtt/m/n/10.95 tf.keras.applications.resnet[]v2.preprocess[]input
+ []
+
+
+
+[12]
+
+[13{l:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}]
+
+LaTeX Warning: Reference `chap:strumenti' on page 14 undefined on input line 53.
+
+
+LaTeX Warning: Reference `chap:esperimenti' on page 14 undefined on input line 57.
+
+
+
+[14]
+Overfull \hbox (10.33131pt too wide) in paragraph at lines 66--67
+[]\OT1/lmr/m/n/10.95 Vengono ri-di-men-sio-na-te al-la di-men-sio-ne di in-put ri-chie-sta dal-l'ar-chi-tet-tu-ra (\OT1/lmr/bx/n/10.95 384x384
+ []
+
+
+
+[15]
+
+LaTeX Warning: Reference `chap:esperimenti' on page 16 undefined on input line 93.
+
+)
+
+[16]
+\openout2 = `cap4_esperimenti/esp.aux'.
+
+ (./cap4_esperimenti/esp.tex
+Capitolo 4.
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 17.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 17.
+
+
+[17
+
+
+
+
+]
+
+[18]
+<imgs/ssim_distribution.png, id=182, 570.933pt x 354.123pt>
+File: imgs/ssim_distribution.png Graphic file (type png)
+<use imgs/ssim_distribution.png>
+Package pdftex.def Info: imgs/ssim_distribution.png  used on input line 73.
+(pdftex.def)             Requested size: 334.60422pt x 207.54745pt.
+
+Underfull \vbox (badness 2635) has occurred while \output is active []
+
+
+
+[19]
+
+LaTeX Warning: Reference `fig:ssim_dist' on page 20 undefined on input line 78.
+
+<imgs/regression_metrics_comparison.png, id=189, 715.11165pt x 426.393pt>
+File: imgs/regression_metrics_comparison.png Graphic file (type png)
+<use imgs/regression_metrics_comparison.png>
+Package pdftex.def Info: imgs/regression_metrics_comparison.png  used on input line 101.
+(pdftex.def)             Requested size: 376.42575pt x 224.45174pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[20 <./imgs/ssim_distribution.png>]
+
+LaTeX Warning: Reference `tab:metriche_regressione' on page 21 undefined on input line 106.
+
+
+LaTeX Warning: Reference `fig:metrics_comparison' on page 21 undefined on input line 106.
+
+<imgs/motionblur.png, id=199, 1572.6253pt x 319.94531pt>
+File: imgs/motionblur.png Graphic file (type png)
+<use imgs/motionblur.png>
+Package pdftex.def Info: imgs/motionblur.png  used on input line 121.
+(pdftex.def)             Requested size: 418.25368pt x 85.09265pt.
+
+
+[21 <./imgs/regression_metrics_comparison.png>]
+
+LaTeX Warning: Reference `fig:motion_blur' on page 22 undefined on input line 142.
+
+<imgs/pixelation.png, id=208, 1356.56813pt x 283.0575pt>
+File: imgs/pixelation.png Graphic file (type png)
+<use imgs/pixelation.png>
+Package pdftex.def Info: imgs/pixelation.png  used on input line 147.
+(pdftex.def)             Requested size: 418.25368pt x 87.26749pt.
+
+
+[22 <./imgs/motionblur.png> <./imgs/pixelation.png>]
+
+LaTeX Warning: Reference `fig:pixelation' on page 23 undefined on input line 167.
+
+<imgs/gaussianblur.png, id=220, 1577.895pt x 344.03531pt>
+File: imgs/gaussianblur.png Graphic file (type png)
+<use imgs/gaussianblur.png>
+Package pdftex.def Info: imgs/gaussianblur.png  used on input line 172.
+(pdftex.def)             Requested size: 418.25368pt x 91.18991pt.
+
+LaTeX Warning: Reference `fig:gaussian_blur' on page 23 undefined on input line 192.
+
+
+Underfull \vbox (badness 2495) has occurred while \output is active []
+
+
+
+[23 <./imgs/gaussianblur.png>]
+<imgs/chromatic aberration.png, id=230, 1571.11969pt x 314.67563pt>
+File: imgs/chromatic aberration.png Graphic file (type png)
+<use imgs/chromatic aberration.png>
+Package pdftex.def Info: imgs/chromatic aberration.png  used on input line 197.
+(pdftex.def)             Requested size: 418.25368pt x 83.76796pt.
+
+
+LaTeX Warning: Reference `fig:chromatic_aberration' on page 24 undefined on input line 217.
+
+<imgs/noisiness.png, id=231, 1582.41188pt x 333.49594pt>
+File: imgs/noisiness.png Graphic file (type png)
+<use imgs/noisiness.png>
+Package pdftex.def Info: imgs/noisiness.png  used on input line 222.
+(pdftex.def)             Requested size: 418.25368pt x 88.147pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[24 <./imgs/chromatic aberration.png>]
+
+LaTeX Warning: Reference `fig:noise' on page 25 undefined on input line 242.
+
+
+
+[25 <./imgs/noisiness.png>])
+
+[26]
+\openout2 = `cap5_conclusioni/concl.aux'.
+
+ (./cap5_conclusioni/concl.tex
+Capitolo 5.
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+)
+
+[27
+
+
+
+
+]
+\openout2 = `appendici/appendici.aux'.
+
+ (./appendici/appendici.tex
+
+[28
+
+
+
+
+]
+Capitolo 6.
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+)
+
+[29]
+\openout2 = `colophon/colophon.aux'.
+
+ (./colophon/colophon.tex
+
+[30
+
+
+
+
+]
+
+Package xcolor Warning: Incompatible color definition on input line 6.
+
+)
+
+[31]
+
+[32
+
+
+
+] (./tesi.bbl
+
+Package xcolor Warning: Incompatible color definition on input line 1.
+
+
+LaTeX Warning: Empty `thebibliography' environment on input line 3.
+
+)
+
+[33
+
+] (./tesi.aux (./cap1_introduzione/intro.aux) (./cap2_strumenti/strum.aux) (./cap3_soluzione/sol.aux) (./cap4_esperimenti/esp.aux) (./cap5_conclusioni/concl.aux) (./appendici/appendici.aux) (./colophon/colophon.aux))
+ ***********
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-03-26>
+ ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `tesi.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `tesi.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  F3DE754D2765FFEBC4BC7BCA2D0C5849;7182.
+ ) 
+Here is how much of TeX's memory you used:
+ 14591 strings out of 469626
+ 233031 string characters out of 5475183
+ 695400 words of memory out of 5000000
+ 40991 multiletter control sequences out of 15000+600000
+ 682364 words of font info for 85 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 75i,13n,79p,1587b,552s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb><l:/texlive/2025/texmf-dist/fonts/type1/urw/helvetic/uhvr8ac.pfb><l:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
+Output written on tesi.pdf (43 pages, 6785864 bytes).
+PDF statistics:
+ 384 PDF objects out of 1000 (max. 8388607)
+ 288 compressed objects within 3 object streams
+ 103 named destinations out of 1000 (max. 500000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+

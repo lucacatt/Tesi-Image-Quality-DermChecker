@@ -1,0 +1,93 @@
+%%%%%%%%%% CAPITOLO DI TESI %%%%%%%%%%
+%
+% Capitolo "3" 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Capitolo 3}
+\label{chap:soluzione}
+
+\section{Architettura del Modello di Regressione}
+
+L'architettura del modello sviluppato per la valutazione del degrado si basa su una configurazione tipica delle reti neurali impiegate nei compiti di visione artificiale, adattata per una task di regressione e sfruttando la potenza del Transfer Learning, come discusso nel Capitolo \ref{chap:strumenti}. L'input al modello consiste in immagini a colori di dimensione fissa pari a \textbf{384x384 pixel} con 3 canali (RGB).
+
+Il modello è concettualmente diviso in due componenti principali che lavorano in serie, ma la sua implementazione richiede un passaggio preliminare cruciale: il preprocessing specifico dell'input.
+
+\subsection{Preprocessing dell'Input}
+
+Prima che l'immagine di input raggiunga gli strati convoluzionali del backbone, è fondamentale che venga preparata attraverso un processo di preprocessing. Questo passaggio non è una semplice operazione di ridimensionamento o conversione dello spazio colore (che avviene durante la fase di caricamento e preparazione del dataset, come descritto nel Capitolo \ref{chap:strumenti}), ma un'operazione specifica che dipende dall'architettura del backbone pre-addestrato utilizzato.
+
+I modelli pre-addestrati su grandi dataset come ImageNet (ResNet, MobileNet, EfficientNet, ecc.) sono stati addestrati con immagini sottoposte a particolari normalizzazioni o scalature dei valori dei pixel. Affinché il backbone possa estrarre correttamente le feature utilizzando i pesi appresi, l'immagine di input deve replicare lo stesso tipo di preprocessing utilizzato durante il suo addestramento originale. Ad esempio, alcune architetture si aspettano valori pixel nell'intervallo [-1, 1], altre nell'intervallo [0, 1] con una standardizzazione basata sulla media e deviazione standard per canale, e altre ancora valori interi tra 0 e 255.
+
+Nel nostro caso, per ciascuno dei backbone esplorati (ResNet50V2, MobileNetV2, EfficientNetB3), è stata applicata la funzione di preprocessing specifica fornita dal framework TensorFlow/Keras (ad esempio, \texttt{tf.keras.applications.resnet\_v2.preprocess\_input} per ResNet50V2). Questo passaggio assicura che l'input al backbone abbia le caratteristiche attese in termini di distribuzione dei valori dei pixel, consentendo un utilizzo efficace dei pesi pre-addestrati. Concettualmente, questo preprocessing può essere visto come un "layer" implicito o esplicito prima del backbone.
+
+\subsection{Backbone Convoluzionale Pre-addestrato}
+
+Questa parte principale della rete funge da potente estrattore di feature visive. È composta da una complessa pila di strati convoluzionali, di pooling e funzioni di attivazione, organizzati in blocchi che diventano progressivamente più astratti man mano che l'immagine viene processata. Per questo progetto, sono stati esplorati e confrontati diversi backbone, tutti pre-addestrati sul vasto dataset ImageNet:
+\begin{itemize}
+    \item \textbf{ResNet50V2:} Una rete profonda che utilizza connessioni residue per facilitare l'addestramento di architetture molto profonde e catturare feature a diverse scale.
+    \item \textbf{MobileNetV2:} Un'architettura progettata per l'efficienza computazionale, ideale per scenari con risorse limitate. Utilizza convoluzioni separabili in profondità per ridurre significativamente il numero di operazioni.
+    \item \textbf{EfficientNetB3:} Parte di una famiglia di modelli che utilizza una tecnica di scaling composto ottimizzata per bilanciare la profondità, la larghezza e la risoluzione della rete. Offre elevate prestazioni con una buona efficienza.
+\end{itemize}
+Questi modelli sono stati importati senza gli strati fully connected finali originali utilizzati per la classificazione su ImageNet (parametro \texttt{include\_top=False}), in quanto tali strati sono specifici del compito di classificazione originale e non rilevanti per la nostra regressione. I pesi derivati dall'addestramento su ImageNet sono stati mantenuti come punto di partenza per sfruttare la conoscenza visiva già acquisita dalla rete su un vasto insieme di immagini naturali.
+
+Durante l'addestramento sul nostro dataset specifico, \textbf{i pesi dell'intero backbone convoluzionale sono stati resi aggiornabili (fine-tuning attivo)}. Questo passaggio è fondamentale per adattare le feature generiche apprese su ImageNet (che sono utili per riconoscere oggetti, texture, ecc.) in feature che siano maggiormente discriminative per il compito specifico di valutare il grado e la tipologia di degrado nelle immagini del nostro dominio applicativo (dermatologia). Il fine-tuning permette alla rete di "specializzarsi" sul nuovo compito mantenendo i benefici dell'addestramento preliminare su larga scala.
+
+\subsection{Regression Head Personalizzata}
+
+L'output del backbone convoluzionale pre-addestrato consiste in un set di feature map ad alto livello che riassumono il contenuto visivo rilevante dell'immagine processata. Queste feature vengono quindi passate a una "testa di regressione" personalizzata, una piccola rete neurale densamente connessa progettata specificamente per mappare queste rappresentazioni complesse allo score numerico di degrado. La regression head è così strutturata:
+\begin{enumerate}
+    \item \textbf{Global Average Pooling 2D:} Questo strato riceve le feature map dall'ultimo strato convoluzionale del backbone e calcola la media dei valori per ciascuna feature map (canale), riducendo le dimensioni spaziali (altezza e larghezza) a 1x1. Il risultato è un singolo vettore di feature, dove ogni elemento del vettore rappresenta l'attivazione media di una specifica feature appresa dal backbone sull'intera immagine. Questa tecnica riduce drasticamente il numero di parametri rispetto a un tradizionale strato Flatten seguito da Dense e aumenta la robustezza a variazioni spaziali.
+    \item \textbf{Dense (256 unità, attivazione ReLU):} Un primo strato densamente connesso che prende in input il vettore di feature appiattito. Con 256 neuroni, questo strato apprende combinazioni non lineari delle feature estratte. La funzione di attivazione ReLU ($f(x) = \max(0, x)$) introduce non linearità, permettendo al modello di apprendere mappature complesse. È computazionalmente efficiente e aiuta a mitigare il problema dello svanire del gradiente.
+    \item \textbf{Dropout (rate 0.4):} Uno strato di Dropout viene applicato dopo il primo strato denso per regolarizzare il modello e prevenire l'overfitting. Durante l'addestramento, il 40\% dei neuroni nello strato precedente viene casualmente disattivato (la loro uscita è impostata a zero) in ogni iterazione. Questo costringe la rete a trovare rappresentazioni ridondanti e a non dipendere eccessivamente da un singolo sottoinsieme di neuroni o connessioni, migliorando la generalizzazione su dati unseen.
+    \item \textbf{Dense (64 unità, attivazione ReLU):} Un secondo strato densamente connesso. Avendo meno unità del precedente, funge da ulteriore livello di astrazione e compressione delle feature, preparando l'output per lo strato finale. Anche qui viene utilizzata l'attivazione ReLU.
+    \item \textbf{Dense (1 unità, attivazione Sigmoid):} Lo strato di output finale. È costituito da un singolo neurone il cui valore rappresenta la predizione dello score di degrado. La funzione di attivazione Sigmoid comprime l'output del neurone nell'intervallo [0, 1]. Questa scelta è funzionale al compito di regressione, poiché lo score target SSIM varia nello stesso intervallo, permettendo al modello di predire direttamente un valore che si allinea al significato della metrica di qualità.
+\end{enumerate}
+
+L'intero modello, combinando il preprocessing specifico, il backbone pre-addestrato in fine-tuning e la regression head personalizzata, viene addestrato end-to-end per apprendere la mappatura dall'immagine grezza (dopo preprocessing) allo score di degrado.
+\section{Pipeline di Addestramento}
+
+L'addestramento del modello a rete neurale proposto è stato condotto attraverso un pipeline ben definito, replicato per ciascuno dei backbone esplorati (ResNet50V2, MobileNetV2, EfficientNetB3). Questo processo ha seguito le fasi standard dell'apprendimento supervisionato per un compito di regressione su immagini.
+
+\subsection{Caricamento e Suddivisione del Dataset}
+
+La prima fase del pipeline prevede il caricamento del dataset preparato e strutturato in formato CSV, come descritto nel Capitolo \ref{chap:strumenti}. Questo file contiene i percorsi delle immagini (sia degradate che originali) e i loro score SSIM associati. Utilizzando la libreria \texttt{pandas}, il file CSV viene letto in un DataFrame. Successivamente, il dataset viene suddiviso in tre insiemi distinti:
+\begin{itemize}
+    \item \textbf{Set di Addestramento (Training Set):} Utilizzato per addestrare la rete, ovvero per aggiornare i pesi e i bias del modello attraverso la minimizzazione della funzione di loss.
+    \item \textbf{Set di Validazione (Validation Set):} Utilizzato durante l'addestramento per monitorare le prestazioni del modello su dati non visti durante la fase di apprendimento dei gradienti. Fornisce una stima imparziale della capacità di generalizzazione del modello durante l'addestramento e viene impiegato per tecniche di regolarizzazione come l'Early Stopping e la riduzione del learning rate.
+    \item \textbf{Set di Test (Test Set):} Utilizzato \textit{solo} al termine dell'addestramento per fornire una valutazione finale e imparziale delle prestazioni del modello su dati completamente nuovi. Questo set è cruciale per stimare la performance reale del modello in scenari operativi e viene descritto nel Capitolo \ref{chap:esperimenti}.
+\end{itemize}
+La suddivisione in set di addestramento e validazione avviene in modo casuale e stratificato per garantire che la distribuzione degli score SSIM sia rappresentativa in entrambi gli insiemi.
+
+\subsection{Pre-elaborazione delle Immagini e Batching}
+
+Durante l'addestramento, le immagini vengono caricate dalla loro posizione su disco in piccoli gruppi chiamati "batch". Questo approccio, noto come addestramento a batch, permette di ottimizzare l'utilizzo della memoria e parallelizzare i calcoli, specialmente su hardware accelerato come le GPU. Per ogni batch di immagini:
+\begin{itemize}
+    \item Le immagini vengono caricate utilizzando librerie come \texttt{cv2} o le utility di caricamento immagini di TensorFlow/Keras.
+    \item Vengono ridimensionate alla dimensione di input richiesta dall'architettura (\textbf{384x384 pixel}).
+    \item Viene applicata la funzione di preprocessing \textbf{specifica} del backbone utilizzato (es. \texttt{efficientnet\_preprocess\_input} per EfficientNetB3). Questo passaggio è cruciale, come discusso in precedenza, per normalizzare i valori dei pixel nel range atteso dal modello pre-addestrato.
+    \item I relativi score SSIM vengono associati alle immagini del batch.
+    \item Viene applicata la strategia di \textbf{pesatura dei campioni}, calcolando il peso per ciascun campione nel batch basato sul suo score SSIM, come descritto nella sezione precedente.
+\end{itemize}
+Il batch di immagini pre-processate e i corrispondenti batch di score target (con i pesi associati) vengono quindi forniti alla rete.
+
+\subsection{Configurazione e Addestramento del Modello}
+
+Una volta definiti l'architettura del modello (backbone + regression head) e il metodo per caricare e preparare i dati, il modello viene configurato per l'addestramento tramite il processo di compilazione:
+\begin{itemize}
+    \item \textbf{Ottimizzatore:} Viene scelto e configurato un algoritmo di ottimizzazione (tipicamente l'Adam optimizer con un learning rate iniziale basso, appropriato per il fine-tuning) per aggiornare i pesi della rete.
+    \item \textbf{Funzione di Loss:} Viene specificata la funzione di loss da minimizzare durante l'addestramento (nel nostro caso, il Mean Absolute Error - MAE), che guida il processo di ottimizzazione quantificando l'errore di predizione.
+    \item \textbf{Metriche di Valutazione:} Vengono definite le metriche che saranno calcolate e monitorate durante l'addestramento e la validazione per valutare le prestazioni del modello. Per il compito di regressione, sono state utilizzate il Mean Squared Error (MSE), il Mean Absolute Error (MAE) e il coefficiente R\textsuperscript{2}, calcolate utilizzando le librerie \texttt{sklearn.metrics}.
+\end{itemize}
+
+L'addestramento vero e proprio consiste nel ripetere il processo di forward pass, calcolo della loss (pesata), backward pass e aggiornamento dei pesi per un numero specificato di \textbf{epoche} (un'epoca corrisponde a un singolo passaggio completo sull'intero set di addestramento). Durante l'addestramento, sono state impiegate tecniche di callback per migliorare il processo:
+\begin{itemize}
+    \item \textbf{Early Stopping:} Monitora la performance del modello sul set di validazione (tipicamente la validation loss) e interrompe l'addestramento se le prestazioni non migliorano per un certo numero di epoche (\textit{patience}), evitando l'overfitting e ripristinando i pesi migliori raggiunti.
+    \item \textbf{ReduceLROnPlateau:} Monitora anch'esso la performance sul set di validazione e riduce automaticamente il learning rate dell'ottimizzatore se le prestazioni ristagnano, aiutando il modello a convergere meglio.
+\end{itemize}
+Questi callback, insieme alla strategia di pesatura dei campioni, hanno contribuito a rendere il processo di addestramento più stabile e a migliorare la capacità di generalizzazione del modello.
+
+\subsection{Salvataggio del Modello Addestrato}
+
+Al termine dell'addestramento (sia per completamento delle epoche che per Early Stopping), il modello con i pesi ottimizzati viene salvato su disco in un formato standard (come \texttt{.keras}) per poter essere successivamente caricato e utilizzato per l'inferenza (predizioni su nuove immagini) o per ulteriori valutazioni.
+
+Questo pipeline di addestramento è stato eseguito in modo indipendente per ciascuna delle tre architetture di backbone scelte (ResNet50V2, MobileNetV2, EfficientNetB3), permettendo di confrontare le loro prestazioni nel compito di valutazione del degrado. I dettagli specifici dell'esecuzione di questi esperimenti e i risultati ottenuti sono presentati nel Capitolo \ref{chap:esperimenti}.

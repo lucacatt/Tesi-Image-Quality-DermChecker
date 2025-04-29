@@ -1,0 +1,15 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Distribuzione dei valori SSIM nel dataset.}}{20}{figure.4.1}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Confronto delle metriche di regressione tra i modelli.}}{21}{figure.4.2}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Risultati su degradazione tramite motion blur.}}{22}{figure.4.3}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Risultati su degradazione tramite pixelazione.}}{22}{figure.4.4}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Risultati su degradazione tramite gaussian blur.}}{23}{figure.4.5}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Risultati su aberrazione cromatica.}}{24}{figure.4.6}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Risultati su immagini degradate da rumore.}}{25}{figure.4.7}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

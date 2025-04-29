@@ -1,0 +1,26 @@
+%%%%%%%%%% CAPITOLO DI TESI %%%%%%%%%%
+%
+% Capitolo "1" 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\chapter{Capitolo 1}
+\label{chap:introduzione}
+
+\section{Introduzione}
+Questo lavoro di tesi affronta il problema della valutazione oggettiva del grado di degradazione delle immagini digitali, con particolare attenzione alla dermatologia. Poiché la qualità delle immagini di lesioni cutanee è fondamentale per la diagnosi, soprattutto in teledermatologia e analisi automatica, la tesi esplora prima i limiti dei metodi tradizionali per la stima del degrado e propone poi un modello basato su reti neurali convoluzionali (CNN). Questo modello è stato progettato e addestrato per fornire una stima affidabile del livello di degradazione, fungendo da filtro di qualità preliminare per applicazioni di analisi dermatologica. Sono presentati il dataset, l'architettura del modello, il processo di addestramento e i risultati sperimentali, dimostrando l'efficacia dell'approccio proposto.
+
+L'affidabilità dei sistemi di analisi automatica dipende dalla qualità dell'input visivo: immagini degradate da sfocatura, rumore o artefatti di compressione possono compromettere l'analisi e portare a diagnosi errate o spreco di risorse. È quindi essenziale valutare la qualità delle immagini prima dell'analisi, scartando quelle non idonee o richiedendo una nuova acquisizione.
+
+Tradizionalmente, la qualità delle immagini è stata valutata tramite metriche full-reference o no-reference, ma queste ultime sono spesso l'unica opzione in ambito clinico. Tuttavia, i metodi tradizionali, come la varianza laplaciana, si sono rivelati insufficienti per stimare in modo robusto e completo il degrado, specialmente in presenza di degradi complessi o non uniformi.
+
+Questa consapevolezza ha motivato l'adozione di metodologie più avanzate, come il deep learning, che negli ultimi anni ha rivoluzionato la visione artificiale. Il lavoro si concentra quindi sullo sviluppo e la validazione di un modello neurale per la valutazione automatica del degrado, con l'obiettivo di creare uno strumento in grado di stimare con precisione il livello di degrado e ottimizzare le applicazioni di analisi dermatologica. Il contributo principale della tesi è la realizzazione e valutazione sperimentale di questo modello, che si è dimostrato più efficace e affidabile rispetto ai metodi convenzionali, migliorando l'efficienza dei sistemi di analisi di immagini in ambito medico.
+La presente tesi è strutturata per guidare il lettore attraverso il percorso di ricerca e sviluppo intrapreso:
+\begin{itemize}
+    \item Il Capitolo \ref{chap:strumenti} presenta gli strumenti teorici e pratici che hanno reso possibile lo sviluppo del progetto, incluse le basi degli algoritmi di computer vision pertinenti, i fondamenti delle reti neurali e dell'apprendimento profondo, e i linguaggi e le librerie software utilizzati.
+    \item Il Capitolo \ref{chap:soluzione} descrive l'idea centrale dell'approccio proposto e l'architettura specifica del modello a rete neurale sviluppato per affrontare il problema della valutazione del degrado delle immagini.
+    \item Il Capitolo \ref{chap:esperimenti} illustra la fase sperimentale, dettagliando i dataset impiegati, le tecniche di degradazione utilizzate, le metriche di valutazione adottate, la procedura di addestramento e i risultati ottenuti dal modello proposto.
+    \item Infine, il Capitolo \ref{chap:conclusioni} riassume le conclusioni principali del lavoro, discute le implicazioni dei risultati, considera i limiti del progetto e suggerisce possibili direzioni per future ricerche.
+\end{itemize}
+
