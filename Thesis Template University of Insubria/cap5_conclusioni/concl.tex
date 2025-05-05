@@ -5,3 +5,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Capitolo 5}
 \label{chap:conclusioni}
+
+Questo lavoro di tesi ha affrontato il problema della valutazione automatica della qualità delle immagini digitali in ambito dermatologico. L'obiettivo primario è stato sviluppare e validare un approccio basato su reti neurali convoluzionali (CNN) per fornire una stima \textit{no-reference} (cioè senza l'immagine originale) del livello di qualità di un'immagine.
+
+A tal fine, è stato adottato un approccio basato sull'apprendimento profondo, sfruttando il Transfer Learning da architetture CNN pre-addestrate.
+
+I risultati sperimentali, discussi nel Capitolo \ref{chap:esperimenti}, hanno dimostrato l'efficacia della metodologia. Tutti i modelli testati hanno appreso con successo a mappare le caratteristiche visive dell'immagine degradata a uno score di qualità, ottenendo buone prestazioni sul set di test (coefficiente R-squared R² > 0.78). In particolare, \textbf{EfficientNetB3} si è distinto per la maggiore precisione quantitativa (R²=0.813), mentre \textbf{ResNet50V2} ha mostrato un ottimo equilibrio tra accuratezza e stabilità delle predizioni di fronte a diversi tipi di degrado. Anche \textbf{MobileNetV2} ha fornito risultati interessanti, specialmente in ottica di efficienza computazionale.
+
+Il contributo principale di questa tesi consiste quindi nell'aver sviluppato e validato uno strumento automatico ed efficace per la stima della qualità \textit{no-reference} di immagini dermatologiche. Tale strumento può avere significative ricadute pratiche:
+\begin{itemize}
+    \item Come \textbf{filtro di qualità} preliminare in sistemi di analisi automatica, per scartare input inaffidabili.
+    \item Come \textbf{supporto in teledermatologia}, per fornire feedback sulla qualità dell'acquisizione.
+    \item Per \textbf{standardizzare la qualità} all'interno di dataset medici per la ricerca.
+\end{itemize}
+
+Tra le \textbf{limitazioni} del lavoro vi sono la dipendenza dalla metrica SSIM come ground truth e la potenziale necessità di un dataset ancora più ampio e vario per coprire tutte le condizioni reali. Le \textbf{prospettive future} includono l'arricchimento del dataset (magari con valutazioni soggettive di esperti), l'esplorazione di architetture o task di apprendimento differenti, e la validazione del modello in contesti clinici reali, eventualmente ottimizzandolo per dispositivi a basse risorse.
+
+In conclusione, questa tesi ha dimostrato con successo che le tecniche di deep learning possono superare i metodi tradizionali nella valutazione della qualità delle immagini dermatologiche, fornendo uno strumento promettente per migliorare l'affidabilità e l'efficienza dei processi diagnostici e di ricerca basati sull'imaging medico.
