@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.28)  29 APR 2025 11:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.28)  18 MAY 2025 16:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -871,11 +871,11 @@ LaTeX Warning: Reference `tab:metriche_regressione' on page 21 undefined on inpu
 
 LaTeX Warning: Reference `fig:metrics_comparison' on page 21 undefined on input line 106.
 
-<imgs/motionblur.png, id=199, 1572.6253pt x 319.94531pt>
+<imgs/motionblur.png, id=199, 1572.6253pt x 353.82187pt>
 File: imgs/motionblur.png Graphic file (type png)
 <use imgs/motionblur.png>
 Package pdftex.def Info: imgs/motionblur.png  used on input line 121.
-(pdftex.def)             Requested size: 418.25368pt x 85.09265pt.
+(pdftex.def)             Requested size: 418.25368pt x 94.10248pt.
 
 
 [21 <./imgs/regression_metrics_comparison.png>]
@@ -893,25 +893,25 @@ Package pdftex.def Info: imgs/pixelation.png  used on input line 147.
 
 LaTeX Warning: Reference `fig:pixelation' on page 23 undefined on input line 167.
 
-<imgs/gaussianblur.png, id=220, 1577.895pt x 344.03531pt>
+<imgs/gaussianblur.png, id=220, 1577.895pt x 356.0803pt>
 File: imgs/gaussianblur.png Graphic file (type png)
 <use imgs/gaussianblur.png>
 Package pdftex.def Info: imgs/gaussianblur.png  used on input line 172.
-(pdftex.def)             Requested size: 418.25368pt x 91.18991pt.
+(pdftex.def)             Requested size: 418.25368pt x 94.38255pt.
 
 LaTeX Warning: Reference `fig:gaussian_blur' on page 23 undefined on input line 192.
 
 
-Underfull \vbox (badness 2495) has occurred while \output is active []
+Underfull \vbox (badness 2012) has occurred while \output is active []
 
 
 
 [23 <./imgs/gaussianblur.png>]
-<imgs/chromatic aberration.png, id=230, 1571.11969pt x 314.67563pt>
+<imgs/chromatic aberration.png, id=230, 1571.11969pt x 368.87813pt>
 File: imgs/chromatic aberration.png Graphic file (type png)
 <use imgs/chromatic aberration.png>
 Package pdftex.def Info: imgs/chromatic aberration.png  used on input line 197.
-(pdftex.def)             Requested size: 418.25368pt x 83.76796pt.
+(pdftex.def)             Requested size: 418.25368pt x 98.19688pt.
 
 
 LaTeX Warning: Reference `fig:chromatic_aberration' on page 24 undefined on input line 217.
@@ -942,31 +942,34 @@ Capitolo 5.
 
 Package xcolor Warning: Incompatible color definition on input line 6.
 
-)
+
+LaTeX Warning: Reference `chap:esperimenti' on page 27 undefined on input line 13.
+
+
 
 [27
 
 
 
 
-]
+])
+
+[28]
 \openout2 = `appendici/appendici.aux'.
 
  (./appendici/appendici.tex
-
-[28
-
-
-
-
-]
 Capitolo 6.
 
 Package xcolor Warning: Incompatible color definition on input line 6.
 
 )
 
-[29]
+[29
+
+
+
+
+]
 \openout2 = `colophon/colophon.aux'.
 
  (./colophon/colophon.tex
@@ -988,18 +991,7 @@ Package xcolor Warning: Incompatible color definition on input line 6.
 
 
 
-] (./tesi.bbl
-
-Package xcolor Warning: Incompatible color definition on input line 1.
-
-
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
-
-)
-
-[33
-
-] (./tesi.aux (./cap1_introduzione/intro.aux) (./cap2_strumenti/strum.aux) (./cap3_soluzione/sol.aux) (./cap4_esperimenti/esp.aux) (./cap5_conclusioni/concl.aux) (./appendici/appendici.aux) (./colophon/colophon.aux))
+] (./tesi.bbl) (./tesi.aux (./cap1_introduzione/intro.aux) (./cap2_strumenti/strum.aux) (./cap3_soluzione/sol.aux) (./cap4_esperimenti/esp.aux) (./cap5_conclusioni/concl.aux) (./appendici/appendici.aux) (./colophon/colophon.aux))
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
@@ -1021,18 +1013,18 @@ Package rerunfilecheck Info: Checksums for `tesi.out':
 (rerunfilecheck)             After:  F3DE754D2765FFEBC4BC7BCA2D0C5849;7182.
  ) 
 Here is how much of TeX's memory you used:
- 14591 strings out of 469626
- 233031 string characters out of 5475183
+ 14588 strings out of 469626
+ 232958 string characters out of 5475183
  695400 words of memory out of 5000000
- 40991 multiletter control sequences out of 15000+600000
+ 40990 multiletter control sequences out of 15000+600000
  682364 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,79p,1587b,552s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr17.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmri10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><l:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt9.pfb><l:/texlive/2025/texmf-dist/fonts/type1/urw/helvetic/uhvr8ac.pfb><l:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb>
-Output written on tesi.pdf (43 pages, 6785864 bytes).
+Output written on tesi.pdf (42 pages, 6750690 bytes).
 PDF statistics:
- 384 PDF objects out of 1000 (max. 8388607)
- 288 compressed objects within 3 object streams
- 103 named destinations out of 1000 (max. 500000)
+ 377 PDF objects out of 1000 (max. 8388607)
+ 282 compressed objects within 3 object streams
+ 101 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
